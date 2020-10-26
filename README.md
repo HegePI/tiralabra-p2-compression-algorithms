@@ -1,0 +1,1 @@
+# Tiralabra, second period, Compression algorithms
