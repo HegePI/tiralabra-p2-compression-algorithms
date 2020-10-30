@@ -4,4 +4,4 @@
 
 
 # Specification document
-[specification document](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/specDoc.md)
+[specification document](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/doc/specDoc.md)
