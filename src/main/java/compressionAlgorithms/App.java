@@ -3,12 +3,24 @@
  */
 package compressionAlgorithms;
 
-public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
+import java.io.FileNotFoundException;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+public class App {
+
+    public static void main(String[] args) throws FileNotFoundException {
+
+        if (args.length == 0) {
+            System.out.println("no file provided");
+        } else {
+            String filePath = args[0];
+            String fileExtension = filePath.split("\\.")[1];
+            Huffman hf = new Huffman();
+
+            if (fileExtension.equals("huff")) {
+                hf.deCompress(filePath);
+
+            }
+            hf.compress(filePath);
+        }
     }
 }
