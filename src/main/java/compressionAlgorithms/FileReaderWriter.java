@@ -7,16 +7,15 @@ import java.util.HashMap;
 
 public class FileReaderWriter {
 
-    public Boolean writeBitsToFile(String fileName, String bits, HashMap<Character, String> map)
+    public Boolean writeBitsToFile(String outputPath, String bits, HashMap<Character, String> map)
             throws IOException {
-
-        FileOutputStream mapOut = new FileOutputStream(fileName + ".prop.huff");
+        FileOutputStream mapOut = new FileOutputStream(outputPath + ".map");
         ObjectOutputStream out = new ObjectOutputStream(mapOut);
         out.writeObject(map);
         out.close();
         mapOut.close();
 
-        FileOutputStream fos = new FileOutputStream(fileName + ".huff");
+        FileOutputStream fos = new FileOutputStream(outputPath + ".huff");
         String byteString = "";
         for (String bit : bits.split("")) {
             byteString = byteString + bit;

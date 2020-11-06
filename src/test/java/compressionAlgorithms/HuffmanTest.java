@@ -43,7 +43,27 @@ public class HuffmanTest {
     public void testConstructBitRepresentations() throws FileNotFoundException {
         HashMap<Character, String> map = hf.constructBitRepresentations(
                 hf.constructHuffmanTree(hf.countCharFrequencyInFile(testFile)));
-        System.out.println(map.keySet());
         assertEquals("0110", map.get('a'));
+    }
+
+    @Test
+    public void testSaveToFile() throws FileNotFoundException {
+        File file = new File("src/test/resources/test.txt");
+        HashMap<Character, Integer> charFrequencies = hf.countCharFrequencyInFile(file);
+        Node rootNode = hf.constructHuffmanTree(charFrequencies);
+        HashMap<Character, String> charsBitRepresentations =
+                hf.constructBitRepresentations(rootNode);
+
+        hf.saveToFile("src/test/resources/test.txt", "src/test/resources/test",
+                charsBitRepresentations);
+
+        File test = new File("src/test/resources/test.huff");
+        File map = new File("src/test/resources/test.map");
+
+        assertEquals(true, test.exists());
+        assertEquals(true, map.exists());
+
+        test.delete();
+        map.delete();
     }
 }

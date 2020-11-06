@@ -15,12 +15,13 @@ public class Huffman {
     Boolean compress(String filePath) throws IOException {
 
         if (filePath.split("\\.")[1].equals("txt")) {
+            String outPath = filePath.split(".")[0];
             File file = new File(filePath);
             HashMap<Character, Integer> charFrequencies = countCharFrequencyInFile(file);
             Node rootNode = constructHuffmanTree(charFrequencies);
             HashMap<Character, String> charsBitRepresentations =
                     constructBitRepresentations(rootNode);
-            return saveToFile(filePath, charsBitRepresentations);
+            return saveToFile(filePath, outPath, charsBitRepresentations);
         }
         System.out.println("You can only compress txt files");
         return false;
@@ -70,7 +71,6 @@ public class Huffman {
             HashMap<Character, String> map) {
         if (node.getCharacter() != null) {
             map.put(node.getCharacter(), bits);
-            System.out.println(node.getCharacter() + ", " + bits);
             return map;
         }
         map = searchChars(node.getRightChilNode(), bits.concat("1"), map);
@@ -78,9 +78,9 @@ public class Huffman {
         return map;
     }
 
-    Boolean saveToFile(String path, HashMap<Character, String> map) throws FileNotFoundException {
-        File file = new File(path);
-        String fileName = path.split(".")[0];
+    Boolean saveToFile(String inputPath, String outputPath, HashMap<Character, String> map)
+            throws FileNotFoundException {
+        File file = new File(inputPath);
         Scanner fileReader = new Scanner(file);
         String asBits = "";
         while (fileReader.hasNext()) {
@@ -92,7 +92,7 @@ public class Huffman {
         fileReader.close();
         try {
             FileReaderWriter frw = new FileReaderWriter();
-            return frw.writeBitsToFile(fileName, asBits, map);
+            return frw.writeBitsToFile(outputPath, asBits, map);
         } catch (Exception e) {
             System.out.println(e);
             return false;
