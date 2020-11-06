@@ -1,8 +1,7 @@
 package compressionAlgorithms;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class NodeTest {
 
@@ -28,5 +27,10 @@ public class NodeTest {
     @Test
     public void getCorrectRightChildValue() {
         assertEquals(Character.valueOf('b'), nodeC.getRightChilNode().getCharacter());
+    }
+
+    @Test
+    public void testCompareNodes() {
+        assertEquals(1, nodeB.compareTo(nodeA));
     }
 }

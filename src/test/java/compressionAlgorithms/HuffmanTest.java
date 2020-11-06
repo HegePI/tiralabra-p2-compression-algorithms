@@ -3,34 +3,47 @@
  */
 package compressionAlgorithms;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import org.junit.jupiter.api.Test;
 
 public class HuffmanTest {
+    File testFile = new File("src/test/resources/test.txt");
+    Huffman hf = new Huffman();
 
     @Test
-    public void testHuffmanCompressWithInCorrectFileExtension() throws FileNotFoundException {
-        Huffman hf = new Huffman();
+    public void testHuffmanCompressWithInCorrectFileExtension() throws IOException {
         assertEquals(false, hf.compress("testFile.csv"));
     }
 
     @Test
     public void testHuffmanDecompressWithCorrectFileExtension() {
-        Huffman hf = new Huffman();
         assertEquals(true, hf.deCompress("testFile.huff"));
     }
 
     @Test
-    public void testCountCharFrequencyInFile() throws FileNotFoundException, UnsupportedEncodingException {
-        File testFile = new File("src/test/resources/test.txt");
-
-        Huffman hf = new Huffman();
+    public void testCountCharFrequencyInFile()
+            throws FileNotFoundException, UnsupportedEncodingException {
         HashMap<Character, Integer> map = hf.countCharFrequencyInFile(testFile);
         assertEquals(Integer.valueOf(69), map.get('e'));
+    }
+
+    @Test
+    public void testConstructHuffmanTree() throws FileNotFoundException {
+        HashMap<Character, Integer> map = hf.countCharFrequencyInFile(testFile);
+        Node rootNode = hf.constructHuffmanTree(map);
+        assertEquals(Integer.valueOf(738), rootNode.getValue());
+    }
+
+    @Test
+    public void testConstructBitRepresentations() throws FileNotFoundException {
+        HashMap<Character, String> map = hf.constructBitRepresentations(
+                hf.constructHuffmanTree(hf.countCharFrequencyInFile(testFile)));
+        System.out.println(map.keySet());
+        assertEquals("0110", map.get('a'));
     }
 }

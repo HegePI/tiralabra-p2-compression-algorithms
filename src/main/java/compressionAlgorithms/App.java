@@ -3,11 +3,11 @@
  */
 package compressionAlgorithms;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class App {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         if (args.length == 0) {
             System.out.println("no file provided");

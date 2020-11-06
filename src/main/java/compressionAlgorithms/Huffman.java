@@ -2,24 +2,25 @@ package compressionAlgorithms;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Huffman {
 
-    String filePath;
-
     public Huffman() {
     }
 
-    Boolean compress(String filePath) throws FileNotFoundException {
+    Boolean compress(String filePath) throws IOException {
 
         if (filePath.split("\\.")[1].equals("txt")) {
             File file = new File(filePath);
             HashMap<Character, Integer> charFrequencies = countCharFrequencyInFile(file);
             Node rootNode = constructHuffmanTree(charFrequencies);
-            HashMap<String, String> charsBitRepresentations = constructBitRepresentations(rootNode);
-            return saveBitsToFile(file, charsBitRepresentations);
+            HashMap<Character, String> charsBitRepresentations =
+                    constructBitRepresentations(rootNode);
+            return saveToFile(file, charsBitRepresentations);
         }
         System.out.println("You can only compress txt files");
         return false;
@@ -47,14 +48,52 @@ public class Huffman {
     }
 
     Node constructHuffmanTree(HashMap<Character, Integer> map) {
-        return new Node('a', 3);
+        PriorityQueue<Node> nodes = new PriorityQueue<>();
+        for (Character c : map.keySet()) {
+            nodes.add(new Node(c, map.get(c)));
+        }
+
+        while (nodes.size() > 1) {
+            Node first = nodes.poll();
+            Node second = nodes.poll();
+            nodes.add(new Node(first, second));
+        }
+        return nodes.poll();
     }
 
-    HashMap<String, String> constructBitRepresentations(Node node) {
-        return new HashMap<>();
+    HashMap<Character, String> constructBitRepresentations(Node node) {
+        HashMap<Character, String> bitRepresentations = new HashMap<>();
+        return searchChars(node, "", bitRepresentations);
     }
 
-    Boolean saveBitsToFile(File file, HashMap<String, String> map) {
-        return true;
+    private HashMap<Character, String> searchChars(Node node, String bits,
+            HashMap<Character, String> map) {
+        if (node.getCharacter() != null) {
+            map.put(node.getCharacter(), bits);
+            System.out.println(node.getCharacter() + ", " + bits);
+            return map;
+        }
+        map = searchChars(node.getRightChilNode(), bits.concat("1"), map);
+        map = searchChars(node.getLeftChildNode(), bits.concat("0"), map);
+        return map;
+    }
+
+    Boolean saveToFile(File file, HashMap<Character, String> map) throws FileNotFoundException {
+        Scanner fileReader = new Scanner(file);
+        String asBits = "";
+        while (fileReader.hasNext()) {
+            String line = fileReader.nextLine();
+            for (Character c : line.toCharArray()) {
+                asBits = asBits.concat(map.get(c));
+            }
+        }
+        fileReader.close();
+        try {
+            FileReaderWriter frw = new FileReaderWriter();
+            return frw.writeBitsToFile("result.huff", asBits, map);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 }
