@@ -20,7 +20,7 @@ public class Huffman {
             Node rootNode = constructHuffmanTree(charFrequencies);
             HashMap<Character, String> charsBitRepresentations =
                     constructBitRepresentations(rootNode);
-            return saveToFile(file, charsBitRepresentations);
+            return saveToFile(filePath, charsBitRepresentations);
         }
         System.out.println("You can only compress txt files");
         return false;
@@ -78,7 +78,9 @@ public class Huffman {
         return map;
     }
 
-    Boolean saveToFile(File file, HashMap<Character, String> map) throws FileNotFoundException {
+    Boolean saveToFile(String path, HashMap<Character, String> map) throws FileNotFoundException {
+        File file = new File(path);
+        String fileName = path.split(".")[0];
         Scanner fileReader = new Scanner(file);
         String asBits = "";
         while (fileReader.hasNext()) {
@@ -90,7 +92,7 @@ public class Huffman {
         fileReader.close();
         try {
             FileReaderWriter frw = new FileReaderWriter();
-            return frw.writeBitsToFile("result.huff", asBits, map);
+            return frw.writeBitsToFile(fileName, asBits, map);
         } catch (Exception e) {
             System.out.println(e);
             return false;
