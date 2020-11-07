@@ -27,8 +27,16 @@ public class Huffman {
         return false;
     }
 
-    Boolean deCompress(String filePath) {
-        return true;
+    Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
+        if (filePath.split("\\.")[1].equals("huff")) {
+            FileReaderWriter frw = new FileReaderWriter();
+            String bits = frw.readBitsFromFile(filePath);
+            HashMap<Character, String> map =
+                    frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");
+            String outputPath = filePath.split("\\.")[0] + ".txt";
+            return frw.constructOriginalFile(bits, map, outputPath);
+        }
+        return false;
     }
 
     HashMap<Character, Integer> countCharFrequencyInFile(File file) throws FileNotFoundException {

@@ -21,8 +21,9 @@ public class HuffmanTest {
     }
 
     @Test
-    public void testHuffmanDecompressWithCorrectFileExtension() {
-        assertEquals(true, hf.deCompress("testFile.huff"));
+    public void testHuffmanDecompressWithInCorrectFileExtension()
+            throws ClassNotFoundException, IOException {
+        assertEquals(false, hf.deCompress("testFile.csv"));
     }
 
     @Test
@@ -65,5 +66,34 @@ public class HuffmanTest {
 
         test.delete();
         map.delete();
+    }
+
+    @Test
+    public void testCreateOriginalFile() throws ClassNotFoundException, IOException {
+        File file = new File("src/test/resources/test.txt");
+        HashMap<Character, Integer> charFrequencies = hf.countCharFrequencyInFile(file);
+        Node rootNode = hf.constructHuffmanTree(charFrequencies);
+        HashMap<Character, String> charsBitRepresentations =
+                hf.constructBitRepresentations(rootNode);
+
+        hf.saveToFile("src/test/resources/test.txt", "src/test/resources/test",
+                charsBitRepresentations);
+
+        File test = new File("src/test/resources/test.huff");
+        File map = new File("src/test/resources/test.map");
+
+        assertEquals(true, test.exists());
+        assertEquals(true, map.exists());
+
+        file.delete();
+
+        Boolean success = hf.deCompress("src/test/resources/test.huff");
+
+        assertEquals(true, success);
+
+        File newFile = new File("test.txt");
+
+        assertEquals(true, newFile.exists());
+
     }
 }

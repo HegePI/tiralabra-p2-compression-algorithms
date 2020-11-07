@@ -1,7 +1,12 @@
 package compressionAlgorithms;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
@@ -33,7 +38,44 @@ public class FileReaderWriter {
         return true;
     }
 
-    public Boolean readBitsFromFile(String path) {
+    public String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
+        FileInputStream fin = new FileInputStream(inputPath);
+        String bits = "";
+        for (Byte b : fin.readAllBytes()) {
+            String s1 = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
+            bits = bits + s1;
+        }
+
+        fin.close();
+
+        return bits;
+    }
+
+    public HashMap<Character, String> readHashMapFromFile(String inputPath)
+            throws IOException, ClassNotFoundException {
+        FileInputStream mapIn = new FileInputStream(inputPath + ".map");
+        ObjectInputStream in = new ObjectInputStream(mapIn);
+        HashMap<Character, String> map = (HashMap<Character, String>) in.readObject();
+        in.close();
+        mapIn.close();
+        return map;
+    }
+
+    public Boolean constructOriginalFile(String bits, HashMap<Character, String> map,
+            String outputPath) throws IOException {
+        FileWriter file = new FileWriter(outputPath);
+        String c = "";
+        for (String bit : bits.split("")) {
+            c = c + bit;
+            if (map.containsValue(c)) {
+                for (Character mapC : map.keySet()) {
+                    if (map.get(mapC).equals(c)) {
+                        file.write(mapC);
+                    }
+                }
+            }
+        }
+        file.close();
         return true;
     }
 }
