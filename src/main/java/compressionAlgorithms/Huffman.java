@@ -13,21 +13,35 @@ public class Huffman {
     }
 
     Boolean compress(String filePath) throws IOException {
-
         if (filePath.split("\\.")[1].equals("txt")) {
+            String outPath = filePath.split("\\.")[0];
             File file = new File(filePath);
             HashMap<Character, Integer> charFrequencies = countCharFrequencyInFile(file);
+            System.out.println("compress " + charFrequencies);
             Node rootNode = constructHuffmanTree(charFrequencies);
             HashMap<Character, String> charsBitRepresentations =
                     constructBitRepresentations(rootNode);
-            return saveToFile(file, charsBitRepresentations);
+            String bits = getBits(filePath, charsBitRepresentations);
+            FileReaderWriter frw = new FileReaderWriter();
+            return frw.writeBitsToFile(outPath, bits, charFrequencies);
         }
         System.out.println("You can only compress txt files");
         return false;
     }
 
-    Boolean deCompress(String filePath) {
-        return true;
+    Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
+        if (filePath.split("\\.")[1].equals("huff")) {
+            FileReaderWriter frw = new FileReaderWriter();
+            String bits = frw.readBitsFromFile(filePath);
+            System.out.println(bits);
+            HashMap<Character, Integer> charFrequencies =
+                    frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");
+            Node root = constructHuffmanTree(charFrequencies);
+            String originalText = getOriginalText(bits, root);
+            String outputPath = filePath.split("\\.")[0];
+            return frw.constructOriginalFile(outputPath, originalText);
+        }
+        return false;
     }
 
     HashMap<Character, Integer> countCharFrequencyInFile(File file) throws FileNotFoundException {
@@ -70,30 +84,46 @@ public class Huffman {
             HashMap<Character, String> map) {
         if (node.getCharacter() != null) {
             map.put(node.getCharacter(), bits);
-            System.out.println(node.getCharacter() + ", " + bits);
             return map;
         }
-        map = searchChars(node.getRightChilNode(), bits.concat("1"), map);
-        map = searchChars(node.getLeftChildNode(), bits.concat("0"), map);
+        map = searchChars(node.getRightChildNode(), bits + "1", map);
+        map = searchChars(node.getLeftChildNode(), bits + "0", map);
         return map;
     }
 
-    Boolean saveToFile(File file, HashMap<Character, String> map) throws FileNotFoundException {
-        Scanner fileReader = new Scanner(file);
-        String asBits = "";
-        while (fileReader.hasNext()) {
-            String line = fileReader.nextLine();
-            for (Character c : line.toCharArray()) {
-                asBits = asBits.concat(map.get(c));
+    String getBits(String filePath, HashMap<Character, String> map) throws FileNotFoundException {
+        String result = "";
+
+        File file = new File(filePath);
+        Scanner reader = new Scanner(file);
+
+        while (reader.hasNext()) {
+            for (Character c : reader.nextLine().toCharArray()) {
+                result += map.get(c);
             }
         }
-        fileReader.close();
-        try {
-            FileReaderWriter frw = new FileReaderWriter();
-            return frw.writeBitsToFile("result.huff", asBits, map);
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
+
+        reader.close();
+        return result;
+    }
+
+    String getOriginalText(String bits, Node root) {
+        String result = "";
+
+        Node current = root;
+        for (Character c : bits.toCharArray()) {
+            if (c == '1') {
+                current = current.getRightChildNode();
+            } else {
+                current = current.getLeftChildNode();
+            }
+            
+            if (current.isLeaf()) {
+                result = result + current.getCharacter();
+                current = root;
+            }
         }
+
+        return result;
     }
 }
