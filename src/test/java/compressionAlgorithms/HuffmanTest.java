@@ -9,11 +9,40 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Scanner;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class HuffmanTest {
-    File testFile = new File("src/test/resources/test.txt");
-    Huffman hf = new Huffman();
+
+
+    static File testFile;
+    static Huffman hf;
+
+    @BeforeAll
+    public static void init() {
+        testFile = new File("src/test/resources/test.txt");
+        hf = new Huffman();
+    }
+
+    @AfterAll
+    public static void clean() {
+        File huff = new File("src/test/resources/test.huff");
+        File map = new File("src/test/resources/test.map");
+        File reconstruct = new File("src/test/resources/test-reconstruct.txt");
+
+        if (huff.exists()) {
+            huff.delete();
+        }
+        if (map.exists()) {
+            map.delete();
+        }
+        if (reconstruct.exists()) {
+            reconstruct.delete();
+        }
+
+    }
 
     @Test
     public void testHuffmanCompressWithInCorrectFileExtension() throws IOException {
@@ -48,15 +77,8 @@ public class HuffmanTest {
     }
 
     @Test
-    public void testSaveToFile() throws FileNotFoundException {
-        File file = new File("src/test/resources/test.txt");
-        HashMap<Character, Integer> charFrequencies = hf.countCharFrequencyInFile(file);
-        Node rootNode = hf.constructHuffmanTree(charFrequencies);
-        HashMap<Character, String> charsBitRepresentations =
-                hf.constructBitRepresentations(rootNode);
-
-        hf.saveToFile("src/test/resources/test.txt", "src/test/resources/test",
-                charsBitRepresentations);
+    public void testSaveToFile() throws IOException {
+        hf.compress("src/test/resources/test.txt");
 
         File test = new File("src/test/resources/test.huff");
         File map = new File("src/test/resources/test.map");
@@ -64,36 +86,61 @@ public class HuffmanTest {
         assertEquals(true, test.exists());
         assertEquals(true, map.exists());
 
-        test.delete();
-        map.delete();
     }
 
     @Test
     public void testCreateOriginalFile() throws ClassNotFoundException, IOException {
-        File file = new File("src/test/resources/test.txt");
-        HashMap<Character, Integer> charFrequencies = hf.countCharFrequencyInFile(file);
+        HashMap<Character, Integer> charFrequencies = hf.countCharFrequencyInFile(testFile);
         Node rootNode = hf.constructHuffmanTree(charFrequencies);
         HashMap<Character, String> charsBitRepresentations =
                 hf.constructBitRepresentations(rootNode);
 
-        hf.saveToFile("src/test/resources/test.txt", "src/test/resources/test",
-                charsBitRepresentations);
+        String bits = hf.getBits("src/test/resources/test.txt", charsBitRepresentations);
+
+        FileReaderWriter frw = new FileReaderWriter();
+        frw.writeBitsToFile("src/test/resources/test", bits, charFrequencies);
 
         File test = new File("src/test/resources/test.huff");
         File map = new File("src/test/resources/test.map");
 
         assertEquals(true, test.exists());
         assertEquals(true, map.exists());
-
-        file.delete();
 
         Boolean success = hf.deCompress("src/test/resources/test.huff");
 
         assertEquals(true, success);
 
-        File newFile = new File("test.txt");
+        File newFile = new File("src/test/resources/test-reconstruct.txt");
 
         assertEquals(true, newFile.exists());
+    }
 
+    @Test
+    public void testOriginalContent() throws FileNotFoundException {
+
+        File originalFile = new File("src/test/resources/test.txt");
+        File constructedFile = new File("src/test/resources/test-reconstruct.txt");
+
+        Scanner reader = new Scanner(originalFile);
+
+        String originalContent = "";
+
+        while (reader.hasNext()) {
+            originalContent = originalContent + reader.nextLine();
+        }
+
+        reader.close();
+
+        Scanner otherReader = new Scanner(constructedFile);
+
+        String constructedContent = "";
+
+        while (otherReader.hasNext()) {
+            constructedContent = constructedContent + otherReader.nextLine();
+        }
+
+        otherReader.close();
+
+        assertEquals(originalContent, constructedContent);
     }
 }

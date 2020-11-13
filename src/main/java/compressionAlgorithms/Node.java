@@ -32,8 +32,15 @@ public class Node implements Comparable<Node> {
         return this.leftChildNode;
     }
 
-    Node getRightChilNode() {
+    Node getRightChildNode() {
         return this.rightChildNode;
+    }
+
+    Boolean isLeaf() {
+        if (this.character != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -26,7 +26,7 @@ public class NodeTest {
 
     @Test
     public void getCorrectRightChildValue() {
-        assertEquals(Character.valueOf('b'), nodeC.getRightChilNode().getCharacter());
+        assertEquals(Character.valueOf('b'), nodeC.getRightChildNode().getCharacter());
     }
 
     @Test
