@@ -2,7 +2,7 @@
 
 ## What have I done
 
-Simplified class FileReaderWriter functions writeBitsToFile and readBitsFromFile because they caused problems when recreating original text. The bits red from .huff file were different from the bits that were written to it. Also instead of saving character to bit represantation hashmap program saves char frequency hashmap. Because of this program can recreate huffman tree.
+Simplified class FileReaderWriter functions [writeBitsToFile](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/src/main/java/compressionAlgorithms/FileReaderWriter.java#L28) and [readBitsFromFile](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/src/main/java/compressionAlgorithms/FileReaderWriter.java#L75) because they caused problems when recreating original text. The bits red from .huff file were different from the bits that were written to it. Also instead of saving character to bit represantation hashmap program saves char frequency hashmap. Because of this program can recreate huffman tree.
 
 ## Progress off an aplication
 
@@ -10,7 +10,7 @@ Now that FileReaderWriter is simplified, huffman algorithm seems to work now. It
 
 ## Learned things
 
-First FileReaderWriter functions writeBitsToFile and readBitsFromFile didn't work.
+First FileReaderWriter functions implementations writeBitsToFile and readBitsFromFile didn't work and caused problems.
 
 ## Unclear things
 
