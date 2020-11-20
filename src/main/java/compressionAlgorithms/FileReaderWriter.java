@@ -2,6 +2,7 @@ package compressionAlgorithms;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    String readeDataFromFile(String inputPath) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
