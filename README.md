@@ -13,3 +13,5 @@
 [Week 2](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/doc/weekReports/week2.md)
 
 [Week 3](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/doc/weekReports/week3.md)
+
+[week 4](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/doc/weekReports/week4.md)
