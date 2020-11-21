@@ -18,11 +18,13 @@ public class HuffmanTest {
 
 
     static File testFile;
+    static File helloFile;
     static Huffman hf;
 
     @BeforeAll
     public static void init() {
         testFile = new File("src/test/resources/test.txt");
+        helloFile = new File("src/test/resources/hello-test.txt");
         hf = new Huffman();
     }
 
@@ -86,6 +88,27 @@ public class HuffmanTest {
         assertEquals(true, test.exists());
         assertEquals(true, map.exists());
 
+    }
+
+    @Test
+    public void testGetBits() throws FileNotFoundException {
+        HashMap<Character, Integer> freq = hf.countCharFrequencyInFile(helloFile);
+        Node root = hf.constructHuffmanTree(freq);
+        HashMap<Character, String> bitRepresentations = hf.constructBitRepresentations(root);
+        String bits = hf.getBits(helloFile.getPath(), bitRepresentations);
+        assertEquals("00101011111110110000100000111011011010100110001111001", bits);
+    }
+
+    @Test
+    public void testGetOriginalText() throws FileNotFoundException {
+        HashMap<Character, Integer> freq = hf.countCharFrequencyInFile(helloFile);
+        Node root = hf.constructHuffmanTree(freq);
+        HashMap<Character, String> bitRepresentations = hf.constructBitRepresentations(root);
+        String bits = hf.getBits(helloFile.getPath(), bitRepresentations);
+
+        String originalText = hf.getOriginalText(bits, root);
+
+        assertEquals("Hello, Huffman!", originalText);
     }
 
     @Test
