@@ -23,16 +23,16 @@ public class HuffmanTest {
 
     @BeforeAll
     public static void init() {
-        testFile = new File("src/test/resources/test.txt");
-        helloFile = new File("src/test/resources/hello-test.txt");
+        testFile = new File("src/test/resources/big.txt");
+        helloFile = new File("src/test/resources/small.txt");
         hf = new Huffman();
     }
 
     @AfterAll
     public static void clean() {
-        File huff = new File("src/test/resources/test.huff");
-        File map = new File("src/test/resources/test.map");
-        File reconstruct = new File("src/test/resources/test-reconstruct.txt");
+        File huff = new File("src/test/resources/big.huff");
+        File map = new File("src/test/resources/big.map");
+        File reconstruct = new File("src/test/resources/big-reconstruct.txt");
 
         if (huff.exists()) {
             huff.delete();
@@ -80,10 +80,10 @@ public class HuffmanTest {
 
     @Test
     public void testSaveToFile() throws IOException {
-        hf.compress("src/test/resources/test.txt");
+        hf.compress("src/test/resources/big.txt");
 
-        File test = new File("src/test/resources/test.huff");
-        File map = new File("src/test/resources/test.map");
+        File test = new File("src/test/resources/big.huff");
+        File map = new File("src/test/resources/big.map");
 
         assertEquals(true, test.exists());
         assertEquals(true, map.exists());
@@ -96,7 +96,9 @@ public class HuffmanTest {
         Node root = hf.constructHuffmanTree(freq);
         HashMap<Character, String> bitRepresentations = hf.constructBitRepresentations(root);
         String bits = hf.getBits(helloFile.getPath(), bitRepresentations);
-        assertEquals("00101011111110110000100000111011011010100110001111001", bits);
+        assertEquals(
+                "1010110011101110110111011010010101110011111111000001000110001000111000100000101111110110110",
+                bits);
     }
 
     @Test
@@ -108,7 +110,7 @@ public class HuffmanTest {
 
         String originalText = hf.getOriginalText(bits, root);
 
-        assertEquals("Hello, Huffman!", originalText);
+        assertEquals("Hello, Huffman and LZW!", originalText);
     }
 
     @Test
@@ -118,22 +120,22 @@ public class HuffmanTest {
         HashMap<Character, String> charsBitRepresentations =
                 hf.constructBitRepresentations(rootNode);
 
-        String bits = hf.getBits("src/test/resources/test.txt", charsBitRepresentations);
+        String bits = hf.getBits("src/test/resources/big.txt", charsBitRepresentations);
 
         FileReaderWriter frw = new FileReaderWriter();
-        frw.writeBitsToFile("src/test/resources/test", bits, charFrequencies);
+        frw.writeBitsToFile("src/test/resources/big", bits, charFrequencies);
 
-        File test = new File("src/test/resources/test.huff");
-        File map = new File("src/test/resources/test.map");
+        File test = new File("src/test/resources/big.huff");
+        File map = new File("src/test/resources/big.map");
 
         assertEquals(true, test.exists());
         assertEquals(true, map.exists());
 
-        Boolean success = hf.deCompress("src/test/resources/test.huff");
+        Boolean success = hf.deCompress("src/test/resources/big.huff");
 
         assertEquals(true, success);
 
-        File newFile = new File("src/test/resources/test-reconstruct.txt");
+        File newFile = new File("src/test/resources/big-reconstruct.txt");
 
         assertEquals(true, newFile.exists());
     }
@@ -141,8 +143,8 @@ public class HuffmanTest {
     @Test
     public void testOriginalContent() throws FileNotFoundException {
 
-        File originalFile = new File("src/test/resources/test.txt");
-        File constructedFile = new File("src/test/resources/test-reconstruct.txt");
+        File originalFile = new File("src/test/resources/big.txt");
+        File constructedFile = new File("src/test/resources/big-reconstruct.txt");
 
         Scanner reader = new Scanner(originalFile);
 
