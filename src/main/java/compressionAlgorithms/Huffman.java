@@ -32,7 +32,7 @@ public class Huffman {
     Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
         if (filePath.split("\\.")[1].equals("huff")) {
             FileReaderWriter frw = new FileReaderWriter();
-            String bits = frw.readBitsFromFile(filePath);
+            String bits = frw.readeDataFromFile(filePath);
             System.out.println(bits);
             HashMap<Character, Integer> charFrequencies =
                     frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");

@@ -7,11 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class FileReaderWriter {
-
 
     /**
      * Function, that writes given bit represantation into a file. Takes output path, bits and
@@ -70,11 +70,12 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    String readeDataFromFile(String inputPath) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
-        // String s1 = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0');
+        // String s1 = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace('
+        // ', '0');
         // bits = bits + s1;
         // }
 
@@ -138,5 +139,28 @@ public class FileReaderWriter {
         }
 
         return true;
+    }
+
+    ArrayList<Integer> readLZWCompressFromFile(String inputpath)
+            throws IOException, ClassNotFoundException {
+        FileInputStream listIn = new FileInputStream(inputpath);
+        ObjectInputStream in = new ObjectInputStream(listIn);
+        ArrayList<Integer> list = (ArrayList<Integer>) in.readObject();
+        in.close();
+        listIn.close();
+        return list;
+    }
+
+    Boolean writeLZWCompressToFile(ArrayList<Integer> data, String path) throws IOException {
+        try {
+            File lzwFile = new File(path + ".lzw");
+            FileOutputStream out = new FileOutputStream(lzwFile);
+            ObjectOutputStream writer = new ObjectOutputStream(out);
+            writer.writeObject(data);
+            writer.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
