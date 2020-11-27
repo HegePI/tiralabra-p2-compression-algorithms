@@ -58,4 +58,44 @@ public class LZWTest {
         ArrayList<Integer> codes = lzw.constructLZWCompress(text);
         assertEquals(text, lzw.constructOriginalText(codes));
     }
+
+    @Test
+    public void testWriteCompressToFile() throws IOException {
+        FileReaderWriter frw = new FileReaderWriter();
+
+        Boolean succes = frw.writeLZWCompressToFile(
+                new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
+                "src/test/resources/lzwCompress");
+        assertEquals(true, succes);
+
+        File newFile = new File("src/test/resources/lzwCompress.lzw");
+        assertEquals(true, newFile.exists());
+
+        if (newFile.exists()) {
+            newFile.delete();
+        }
+    }
+
+    @Test
+    public void readCompressFromFile() throws IOException, ClassNotFoundException {
+        FileReaderWriter frw = new FileReaderWriter();
+
+        Boolean succes = frw.writeLZWCompressToFile(
+                new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
+                "src/test/resources/lzwCompress");
+
+        assertEquals(true, succes);
+
+        File newFile = new File("src/test/resources/lzwCompress.lzw");
+
+        assertEquals(true, newFile.exists());
+
+        ArrayList<Integer> list = frw.readLZWCompressFromFile("src/test/resources/lzwCompress.lzw");
+
+        assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+
+        if (newFile.exists()) {
+            newFile.delete();
+        }
+    }
 }

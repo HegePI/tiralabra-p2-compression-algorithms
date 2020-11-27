@@ -21,7 +21,23 @@ public class LZW {
         FileReaderWriter frw = new FileReaderWriter();
         String text = frw.readeDataFromFile(file);
         ArrayList<Integer> compressedData = constructLZWCompress(text);
-        return true;
+        String outputPath = file.split("\\.")[0];
+        return frw.writeLZWCompressToFile(compressedData, outputPath);
+    }
+
+    /**
+     * 
+     * @param file
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    Boolean deCompress(String file) throws IOException, ClassNotFoundException {
+        FileReaderWriter frw = new FileReaderWriter();
+        ArrayList<Integer> compress = frw.readLZWCompressFromFile(file);
+        String originalText = constructOriginalText(compress);
+        String outputPath = file.split("\\.")[0] + ".txt";
+        return frw.constructOriginalFile(outputPath, originalText);
     }
 
     /**
@@ -58,20 +74,6 @@ public class LZW {
     }
 
     /**
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    Boolean deCompress(String file) throws IOException {
-        FileReaderWriter frw = new FileReaderWriter();
-        ArrayList<Integer> compress = frw.readLZWCompressFromFile(file);
-        String originalText = constructOriginalText(compress);
-        String outputPath = file.split("\\.")[0] + ".txt";
-        return frw.constructOriginalFile(outputPath, originalText);
-    }
-
-    /**
      * LZW decoder. Takes text, that will be translated into original text.
      * 
      * @param compress Original text in coded format. Is a list of Integers.
@@ -96,7 +98,6 @@ public class LZW {
                 } else {
                     subString = list.get(next - 256);
                 }
-
             }
             result = result + subString;
             c = subString.toCharArray()[0];
