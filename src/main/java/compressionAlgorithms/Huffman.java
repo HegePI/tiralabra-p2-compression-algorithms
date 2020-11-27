@@ -12,17 +12,17 @@ public class Huffman {
     public Huffman() {
     }
 
-    Boolean compress(String filePath) throws IOException {
+    Boolean compress(String filePath) throws IOException, ClassNotFoundException {
         if (filePath.split("\\.")[1].equals("txt")) {
             String outPath = filePath.split("\\.")[0];
-            File file = new File(filePath);
-            HashMap<Character, Integer> charFrequencies = countCharFrequencyInFile(file);
-            System.out.println("compress " + charFrequencies);
+            FileReaderWriter frw = new FileReaderWriter();
+            String text = frw.readTextFromFile(filePath);
+
+            HashMap<Character, Integer> charFrequencies = countCharFrequency(text);
             Node rootNode = constructHuffmanTree(charFrequencies);
             HashMap<Character, String> charsBitRepresentations =
                     constructBitRepresentations(rootNode);
-            String bits = getBits(filePath, charsBitRepresentations);
-            FileReaderWriter frw = new FileReaderWriter();
+            String bits = getBits(text, charsBitRepresentations);
             return frw.writeBitsToFile(outPath, bits, charFrequencies);
         }
         System.out.println("You can only compress txt files");
@@ -32,32 +32,27 @@ public class Huffman {
     Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
         if (filePath.split("\\.")[1].equals("huff")) {
             FileReaderWriter frw = new FileReaderWriter();
-            String bits = frw.readeDataFromFile(filePath);
+            String bits = frw.readBitsFromFile(filePath);
             System.out.println(bits);
             HashMap<Character, Integer> charFrequencies =
                     frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");
             Node root = constructHuffmanTree(charFrequencies);
             String originalText = getOriginalText(bits, root);
             String outputPath = filePath.split("\\.")[0];
-            return frw.constructOriginalFile(outputPath, originalText);
+            return frw.writeTextToFile(outputPath, originalText);
         }
         return false;
     }
 
-    HashMap<Character, Integer> countCharFrequencyInFile(File file) throws FileNotFoundException {
+    HashMap<Character, Integer> countCharFrequency(String text) throws FileNotFoundException {
         HashMap<Character, Integer> map = new HashMap<>();
-        Scanner reader = new Scanner(file);
-        while (reader.hasNextLine()) {
-            String line = reader.nextLine();
-            for (Character c : line.toCharArray()) {
-                if (!map.containsKey(c)) {
-                    map.put(c, 1);
-                } else {
-                    map.put(c, map.get(c) + 1);
-                }
+        for (Character c : text.toCharArray()) {
+            if (!map.containsKey(c)) {
+                map.put(c, 1);
+            } else {
+                map.put(c, map.get(c) + 1);
             }
         }
-        reader.close();
         return map;
     }
 
@@ -91,19 +86,13 @@ public class Huffman {
         return map;
     }
 
-    String getBits(String filePath, HashMap<Character, String> map) throws FileNotFoundException {
+    String getBits(String text, HashMap<Character, String> map) throws FileNotFoundException {
         String result = "";
 
-        File file = new File(filePath);
-        Scanner reader = new Scanner(file);
-
-        while (reader.hasNext()) {
-            for (Character c : reader.nextLine().toCharArray()) {
-                result += map.get(c);
-            }
+        for (Character c : text.toCharArray()) {
+            result = result + map.get(c);
         }
 
-        reader.close();
         return result;
     }
 
@@ -117,7 +106,7 @@ public class Huffman {
             } else {
                 current = current.getLeftChildNode();
             }
-            
+
             if (current.isLeaf()) {
                 result = result + current.getCharacter();
                 current = root;

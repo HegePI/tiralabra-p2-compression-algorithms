@@ -2,6 +2,7 @@ package compressionAlgorithms;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,7 +59,6 @@ public class FileReaderWriter {
             System.out.println(e);
             return false;
         }
-
     }
 
     /**
@@ -70,7 +70,7 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    String readeDataFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
@@ -125,7 +125,7 @@ public class FileReaderWriter {
      * @return
      * @throws IOException
      */
-    Boolean constructOriginalFile(String outputPath, String text) throws IOException {
+    Boolean writeTextToFile(String outputPath, String text) throws IOException {
 
         File newFile = new File(outputPath + "-reconstruct.txt");
         try {
@@ -162,5 +162,19 @@ public class FileReaderWriter {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    String readTextFromFile(String filepath) throws FileNotFoundException {
+        String result = "";
+
+        File file = new File(filepath);
+        Scanner reader = new Scanner(file);
+
+        while (reader.hasNext()) {
+            result = result + reader.nextLine();
+        }
+
+        reader.close();
+        return result;
     }
 }

@@ -19,7 +19,7 @@ public class LZW {
      */
     Boolean compress(String file) throws ClassNotFoundException, IOException {
         FileReaderWriter frw = new FileReaderWriter();
-        String text = frw.readeDataFromFile(file);
+        String text = frw.readBitsFromFile(file);
         ArrayList<Integer> compressedData = constructLZWCompress(text);
         String outputPath = file.split("\\.")[0];
         return frw.writeLZWCompressToFile(compressedData, outputPath);
@@ -37,7 +37,7 @@ public class LZW {
         ArrayList<Integer> compress = frw.readLZWCompressFromFile(file);
         String originalText = constructOriginalText(compress);
         String outputPath = file.split("\\.")[0] + ".txt";
-        return frw.constructOriginalFile(outputPath, originalText);
+        return frw.writeTextToFile(outputPath, originalText);
     }
 
     /**
