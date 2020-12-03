@@ -2,13 +2,13 @@ package compressionAlgorithms;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class FileReaderWriter {
@@ -23,11 +23,10 @@ public class FileReaderWriter {
      * @return returns true, if write was succesfull, false otherwise.
      * @throws IOException
      */
-    Boolean writeBitsToFile(String outputPath, String bits, HashMap<Character, Integer> map)
-            throws IOException {
+    Boolean writeBitsToFile(String outputPath, String bits, int[] frequencies) throws IOException {
         FileOutputStream mapOut = new FileOutputStream(outputPath + ".map");
         ObjectOutputStream out = new ObjectOutputStream(mapOut);
-        out.writeObject(map);
+        out.writeObject(frequencies);
         out.close();
         mapOut.close();
 
@@ -58,7 +57,6 @@ public class FileReaderWriter {
             System.out.println(e);
             return false;
         }
-
     }
 
     /**
@@ -70,7 +68,7 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    String readeDataFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
@@ -106,11 +104,10 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    HashMap<Character, Integer> readHashMapFromFile(String inputPath)
-            throws IOException, ClassNotFoundException {
+    int[] readFrequenciesFromFile(String inputPath) throws IOException, ClassNotFoundException {
         FileInputStream mapIn = new FileInputStream(inputPath);
         ObjectInputStream in = new ObjectInputStream(mapIn);
-        HashMap<Character, Integer> map = (HashMap<Character, Integer>) in.readObject();
+        int[] map = (int[]) in.readObject();
         in.close();
         mapIn.close();
         return map;
@@ -125,7 +122,7 @@ public class FileReaderWriter {
      * @return
      * @throws IOException
      */
-    Boolean constructOriginalFile(String outputPath, String text) throws IOException {
+    Boolean writeTextToFile(String outputPath, String text) throws IOException {
 
         File newFile = new File(outputPath + "-reconstruct.txt");
         try {
@@ -162,5 +159,19 @@ public class FileReaderWriter {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    String readTextFromFile(String filepath) throws FileNotFoundException {
+        String result = "";
+
+        File file = new File(filepath);
+        Scanner reader = new Scanner(file);
+
+        while (reader.hasNext()) {
+            result = result + reader.nextLine();
+        }
+
+        reader.close();
+        return result;
     }
 }

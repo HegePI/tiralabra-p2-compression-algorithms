@@ -1,28 +1,24 @@
 package compressionAlgorithms;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 
 public class Huffman {
 
     public Huffman() {
     }
 
-    Boolean compress(String filePath) throws IOException {
+    Boolean compress(String filePath) throws IOException, ClassNotFoundException {
         if (filePath.split("\\.")[1].equals("txt")) {
             String outPath = filePath.split("\\.")[0];
-            File file = new File(filePath);
-            HashMap<Character, Integer> charFrequencies = countCharFrequencyInFile(file);
-            System.out.println("compress " + charFrequencies);
-            Node rootNode = constructHuffmanTree(charFrequencies);
-            HashMap<Character, String> charsBitRepresentations =
-                    constructBitRepresentations(rootNode);
-            String bits = getBits(filePath, charsBitRepresentations);
             FileReaderWriter frw = new FileReaderWriter();
+            String text = frw.readTextFromFile(filePath);
+
+            int[] charFrequencies = countCharFrequency(text);
+            Node rootNode = constructHuffmanTree(charFrequencies);
+            String[] charsBitRepresentations = constructBitRepresentations(rootNode);
+            String bits = getBits(text, charsBitRepresentations);
             return frw.writeBitsToFile(outPath, bits, charFrequencies);
         }
         System.out.println("You can only compress txt files");
@@ -32,39 +28,31 @@ public class Huffman {
     Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
         if (filePath.split("\\.")[1].equals("huff")) {
             FileReaderWriter frw = new FileReaderWriter();
-            String bits = frw.readeDataFromFile(filePath);
+            String bits = frw.readBitsFromFile(filePath);
             System.out.println(bits);
-            HashMap<Character, Integer> charFrequencies =
-                    frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");
+            int[] charFrequencies = frw.readFrequenciesFromFile(filePath.split("\\.")[0] + ".map");
             Node root = constructHuffmanTree(charFrequencies);
             String originalText = getOriginalText(bits, root);
             String outputPath = filePath.split("\\.")[0];
-            return frw.constructOriginalFile(outputPath, originalText);
+            return frw.writeTextToFile(outputPath, originalText);
         }
         return false;
     }
 
-    HashMap<Character, Integer> countCharFrequencyInFile(File file) throws FileNotFoundException {
-        HashMap<Character, Integer> map = new HashMap<>();
-        Scanner reader = new Scanner(file);
-        while (reader.hasNextLine()) {
-            String line = reader.nextLine();
-            for (Character c : line.toCharArray()) {
-                if (!map.containsKey(c)) {
-                    map.put(c, 1);
-                } else {
-                    map.put(c, map.get(c) + 1);
-                }
-            }
+    int[] countCharFrequency(String text) throws FileNotFoundException {
+        int[] frequencies = new int[256];
+        for (Character c : text.toCharArray()) {
+            frequencies[c]++;
         }
-        reader.close();
-        return map;
+        return frequencies;
     }
 
-    Node constructHuffmanTree(HashMap<Character, Integer> map) {
+    Node constructHuffmanTree(int[] frequencies) {
         PriorityQueue<Node> nodes = new PriorityQueue<>();
-        for (Character c : map.keySet()) {
-            nodes.add(new Node(c, map.get(c)));
+        for (int c = 0; c < 256; c++) {
+            if (frequencies[c] > 0) {
+                nodes.add(new Node((char) c, frequencies[c]));
+            }
         }
 
         while (nodes.size() > 1) {
@@ -75,35 +63,26 @@ public class Huffman {
         return nodes.poll();
     }
 
-    HashMap<Character, String> constructBitRepresentations(Node node) {
-        HashMap<Character, String> bitRepresentations = new HashMap<>();
+    String[] constructBitRepresentations(Node node) {
+        String[] bitRepresentations = new String[256];
         return searchChars(node, "", bitRepresentations);
     }
 
-    private HashMap<Character, String> searchChars(Node node, String bits,
-            HashMap<Character, String> map) {
+    private String[] searchChars(Node node, String bits, String[] representations) {
         if (node.getCharacter() != null) {
-            map.put(node.getCharacter(), bits);
-            return map;
+            representations[node.getCharacter()] = bits;
+            return representations;
         }
-        map = searchChars(node.getRightChildNode(), bits + "1", map);
-        map = searchChars(node.getLeftChildNode(), bits + "0", map);
-        return map;
+        representations = searchChars(node.getRightChildNode(), bits + "1", representations);
+        representations = searchChars(node.getLeftChildNode(), bits + "0", representations);
+        return representations;
     }
 
-    String getBits(String filePath, HashMap<Character, String> map) throws FileNotFoundException {
+    String getBits(String text, String[] representations) throws FileNotFoundException {
         String result = "";
-
-        File file = new File(filePath);
-        Scanner reader = new Scanner(file);
-
-        while (reader.hasNext()) {
-            for (Character c : reader.nextLine().toCharArray()) {
-                result += map.get(c);
-            }
+        for (Character c : text.toCharArray()) {
+            result = result + representations[c];
         }
-
-        reader.close();
         return result;
     }
 
@@ -117,7 +96,7 @@ public class Huffman {
             } else {
                 current = current.getLeftChildNode();
             }
-            
+
             if (current.isLeaf()) {
                 result = result + current.getCharacter();
                 current = root;
