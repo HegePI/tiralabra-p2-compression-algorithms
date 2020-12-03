@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,15 @@ public class LZWTest {
     @BeforeAll
     public static void init() {
         lzw = new LZW();
+    }
+
+    @AfterAll
+    public static void cleanUp() {
+        File newFile = new File("src/test/resources/lzwCompress.lzw");
+
+        if (newFile.exists()) {
+            newFile.delete();
+        }
     }
 
     @Test
@@ -70,14 +80,10 @@ public class LZWTest {
 
         File newFile = new File("src/test/resources/lzwCompress.lzw");
         assertEquals(true, newFile.exists());
-
-        if (newFile.exists()) {
-            newFile.delete();
-        }
     }
 
     @Test
-    public void readCompressFromFile() throws IOException, ClassNotFoundException {
+    public void testReadCompressFromFile() throws IOException, ClassNotFoundException {
         FileReaderWriter frw = new FileReaderWriter();
 
         Boolean succes = frw.writeLZWCompressToFile(
@@ -93,9 +99,5 @@ public class LZWTest {
         ArrayList<Integer> list = frw.readLZWCompressFromFile("src/test/resources/lzwCompress.lzw");
 
         assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), list);
-
-        if (newFile.exists()) {
-            newFile.delete();
-        }
     }
 }

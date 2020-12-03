@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class FileReaderWriter {
@@ -24,11 +23,10 @@ public class FileReaderWriter {
      * @return returns true, if write was succesfull, false otherwise.
      * @throws IOException
      */
-    Boolean writeBitsToFile(String outputPath, String bits, HashMap<Character, Integer> map)
-            throws IOException {
+    Boolean writeBitsToFile(String outputPath, String bits, int[] frequencies) throws IOException {
         FileOutputStream mapOut = new FileOutputStream(outputPath + ".map");
         ObjectOutputStream out = new ObjectOutputStream(mapOut);
-        out.writeObject(map);
+        out.writeObject(frequencies);
         out.close();
         mapOut.close();
 
@@ -106,11 +104,10 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    HashMap<Character, Integer> readHashMapFromFile(String inputPath)
-            throws IOException, ClassNotFoundException {
+    int[] readFrequenciesFromFile(String inputPath) throws IOException, ClassNotFoundException {
         FileInputStream mapIn = new FileInputStream(inputPath);
         ObjectInputStream in = new ObjectInputStream(mapIn);
-        HashMap<Character, Integer> map = (HashMap<Character, Integer>) in.readObject();
+        int[] map = (int[]) in.readObject();
         in.close();
         mapIn.close();
         return map;

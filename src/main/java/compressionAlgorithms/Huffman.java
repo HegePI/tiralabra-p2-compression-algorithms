@@ -1,11 +1,8 @@
 package compressionAlgorithms;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 
 public class Huffman {
 
@@ -18,10 +15,9 @@ public class Huffman {
             FileReaderWriter frw = new FileReaderWriter();
             String text = frw.readTextFromFile(filePath);
 
-            HashMap<Character, Integer> charFrequencies = countCharFrequency(text);
+            int[] charFrequencies = countCharFrequency(text);
             Node rootNode = constructHuffmanTree(charFrequencies);
-            HashMap<Character, String> charsBitRepresentations =
-                    constructBitRepresentations(rootNode);
+            String[] charsBitRepresentations = constructBitRepresentations(rootNode);
             String bits = getBits(text, charsBitRepresentations);
             return frw.writeBitsToFile(outPath, bits, charFrequencies);
         }
@@ -34,8 +30,7 @@ public class Huffman {
             FileReaderWriter frw = new FileReaderWriter();
             String bits = frw.readBitsFromFile(filePath);
             System.out.println(bits);
-            HashMap<Character, Integer> charFrequencies =
-                    frw.readHashMapFromFile(filePath.split("\\.")[0] + ".map");
+            int[] charFrequencies = frw.readFrequenciesFromFile(filePath.split("\\.")[0] + ".map");
             Node root = constructHuffmanTree(charFrequencies);
             String originalText = getOriginalText(bits, root);
             String outputPath = filePath.split("\\.")[0];
@@ -44,22 +39,20 @@ public class Huffman {
         return false;
     }
 
-    HashMap<Character, Integer> countCharFrequency(String text) throws FileNotFoundException {
-        HashMap<Character, Integer> map = new HashMap<>();
+    int[] countCharFrequency(String text) throws FileNotFoundException {
+        int[] frequencies = new int[256];
         for (Character c : text.toCharArray()) {
-            if (!map.containsKey(c)) {
-                map.put(c, 1);
-            } else {
-                map.put(c, map.get(c) + 1);
-            }
+            frequencies[c]++;
         }
-        return map;
+        return frequencies;
     }
 
-    Node constructHuffmanTree(HashMap<Character, Integer> map) {
+    Node constructHuffmanTree(int[] frequencies) {
         PriorityQueue<Node> nodes = new PriorityQueue<>();
-        for (Character c : map.keySet()) {
-            nodes.add(new Node(c, map.get(c)));
+        for (int c = 0; c < 256; c++) {
+            if (frequencies[c] > 0) {
+                nodes.add(new Node((char) c, frequencies[c]));
+            }
         }
 
         while (nodes.size() > 1) {
@@ -70,29 +63,26 @@ public class Huffman {
         return nodes.poll();
     }
 
-    HashMap<Character, String> constructBitRepresentations(Node node) {
-        HashMap<Character, String> bitRepresentations = new HashMap<>();
+    String[] constructBitRepresentations(Node node) {
+        String[] bitRepresentations = new String[256];
         return searchChars(node, "", bitRepresentations);
     }
 
-    private HashMap<Character, String> searchChars(Node node, String bits,
-            HashMap<Character, String> map) {
+    private String[] searchChars(Node node, String bits, String[] representations) {
         if (node.getCharacter() != null) {
-            map.put(node.getCharacter(), bits);
-            return map;
+            representations[node.getCharacter()] = bits;
+            return representations;
         }
-        map = searchChars(node.getRightChildNode(), bits + "1", map);
-        map = searchChars(node.getLeftChildNode(), bits + "0", map);
-        return map;
+        representations = searchChars(node.getRightChildNode(), bits + "1", representations);
+        representations = searchChars(node.getLeftChildNode(), bits + "0", representations);
+        return representations;
     }
 
-    String getBits(String text, HashMap<Character, String> map) throws FileNotFoundException {
+    String getBits(String text, String[] representations) throws FileNotFoundException {
         String result = "";
-
         for (Character c : text.toCharArray()) {
-            result = result + map.get(c);
+            result = result + representations[c];
         }
-
         return result;
     }
 

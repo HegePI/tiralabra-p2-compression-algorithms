@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -33,38 +32,38 @@ public class HuffmanTest {
     @Test
     public void testCountCharFrequency()
             throws FileNotFoundException, UnsupportedEncodingException {
-        HashMap<Character, Integer> map = hf.countCharFrequency("Hello, counter!");
-        assertEquals(Integer.valueOf(2), map.get('e'));
+        int[] frequencies = hf.countCharFrequency("Hello, counter!");
+        assertEquals(Integer.valueOf(2), frequencies['e']);
     }
 
     @Test
     public void testConstructHuffmanTree() throws FileNotFoundException {
-        HashMap<Character, Integer> map = hf.countCharFrequency("Hello, counter!");
-        Node rootNode = hf.constructHuffmanTree(map);
+        int[] frequencies = hf.countCharFrequency("Hello, counter!");
+        Node rootNode = hf.constructHuffmanTree(frequencies);
         assertEquals(Integer.valueOf(15), rootNode.getValue());
     }
 
     @Test
     public void testConstructBitRepresentations() throws FileNotFoundException {
-        HashMap<Character, String> map = hf.constructBitRepresentations(
+        String[] map = hf.constructBitRepresentations(
                 hf.constructHuffmanTree(hf.countCharFrequency("Hello, counter!")));
-        assertEquals("001", map.get('o'));
+        assertEquals("111", map['o']);
     }
 
     @Test
     public void testGetBits() throws FileNotFoundException {
-        HashMap<Character, Integer> freq = hf.countCharFrequency("Hello, counter!");
-        Node root = hf.constructHuffmanTree(freq);
-        HashMap<Character, String> bitRepresentations = hf.constructBitRepresentations(root);
+        int[] frequencies = hf.countCharFrequency("Hello, counter!");
+        Node root = hf.constructHuffmanTree(frequencies);
+        String[] bitRepresentations = hf.constructBitRepresentations(root);
         String bits = hf.getBits("Hello, counter!", bitRepresentations);
-        assertEquals("00010111111100101001000010100101100111110110110011100", bits);
+        assertEquals("01011010010011111001100011011110110000011110101001100", bits);
     }
 
     @Test
     public void testGetOriginalText() throws FileNotFoundException {
-        HashMap<Character, Integer> freq = hf.countCharFrequency("Hello, counter!");
-        Node root = hf.constructHuffmanTree(freq);
-        HashMap<Character, String> bitRepresentations = hf.constructBitRepresentations(root);
+        int[] frequencies = hf.countCharFrequency("Hello, counter!");
+        Node root = hf.constructHuffmanTree(frequencies);
+        String[] bitRepresentations = hf.constructBitRepresentations(root);
         String bits = hf.getBits("Hello, counter!", bitRepresentations);
 
         String originalText = hf.getOriginalText(bits, root);
