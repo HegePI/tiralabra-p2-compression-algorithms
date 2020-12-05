@@ -2,7 +2,7 @@
 
 ## What have I done
 
-Started to implement own datastructures. MyList datastructure has been made and I will start to implement MyHashMap and MyHeap datastructures.
+Started to implement own [datastructures](https://github.com/HegePI/tiralabra-p2-compression-algorithms/tree/master/src/main/java/compressionAlgorithms/datastructures). [MyList](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/src/main/java/compressionAlgorithms/datastructures/MyList.java) datastructure has been made and I will start to implement [MyHashMap](https://github.com/HegePI/tiralabra-p2-compression-algorithms/blob/master/src/main/java/compressionAlgorithms/datastructures/MyHashMap.java) and MyHeap datastructures.
 
 ## Progress off an aplication
 
