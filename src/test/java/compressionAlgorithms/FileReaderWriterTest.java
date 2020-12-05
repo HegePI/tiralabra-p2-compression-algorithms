@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.algorithms.Huffman;
+import compressionAlgorithms.datastructures.MyList;
 
 public class FileReaderWriterTest {
 
@@ -105,7 +106,12 @@ public class FileReaderWriterTest {
 
     @Test
     public void testWriteLZWCompressToFile() throws IOException {
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        MyList<Integer> list = new MyList<>();
+
+        for (int i = 0; i < 10; i++) {
+            list.append(i);
+        }
+
         Boolean success =
                 frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
         assertEquals(true, success);
@@ -117,13 +123,26 @@ public class FileReaderWriterTest {
     @Test
     public void testReadLZWCompressFromFile() throws ClassNotFoundException, IOException {
 
-        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        MyList<Integer> list = new MyList<>();
+
+        for (int i = 0; i < 10; i++) {
+            list.append(i);
+        }
+
         Boolean success =
                 frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
 
-        ArrayList<Integer> listFromFile =
+        MyList<Integer> listFromFile =
                 frw.readLZWCompressFromFile("src/test/resources/fileReaderWriterTest.lzw");
 
-        assertEquals(list, listFromFile);
+        boolean same = true;
+        for (int i = 0; i < 10; i++) {
+            if (list.get(i).intValue() != listFromFile.get(i).intValue()) {
+                same = false;
+                break;
+            }
+        }
+
+        assertEquals(true, same);
     }
 }

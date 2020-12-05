@@ -1,4 +1,4 @@
-package compressionAlgorithms;
+package compressionAlgorithms.IO;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,10 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Scanner;
+import compressionAlgorithms.datastructures.MyList;
 
 public class FileReaderWriter {
+
+
+    public FileReaderWriter() {
+    }
 
     /**
      * Function, that writes given bit represantation into a file. Takes output path, bits and
@@ -23,7 +27,8 @@ public class FileReaderWriter {
      * @return returns true, if write was succesfull, false otherwise.
      * @throws IOException
      */
-    Boolean writeBitsToFile(String outputPath, String bits, int[] frequencies) throws IOException {
+    public Boolean writeBitsToFile(String outputPath, String bits, int[] frequencies)
+            throws IOException {
         FileOutputStream mapOut = new FileOutputStream(outputPath + ".map");
         ObjectOutputStream out = new ObjectOutputStream(mapOut);
         out.writeObject(frequencies);
@@ -68,7 +73,7 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    public String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
@@ -104,7 +109,8 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    int[] readFrequenciesFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    public int[] readFrequenciesFromFile(String inputPath)
+            throws IOException, ClassNotFoundException {
         FileInputStream mapIn = new FileInputStream(inputPath);
         ObjectInputStream in = new ObjectInputStream(mapIn);
         int[] map = (int[]) in.readObject();
@@ -122,7 +128,7 @@ public class FileReaderWriter {
      * @return
      * @throws IOException
      */
-    Boolean writeTextToFile(String outputPath, String text) throws IOException {
+    public Boolean writeTextToFile(String outputPath, String text) throws IOException {
 
         File newFile = new File(outputPath + "-reconstruct.txt");
         try {
@@ -138,17 +144,17 @@ public class FileReaderWriter {
         return true;
     }
 
-    ArrayList<Integer> readLZWCompressFromFile(String inputpath)
+    public MyList<Integer> readLZWCompressFromFile(String inputpath)
             throws IOException, ClassNotFoundException {
         FileInputStream listIn = new FileInputStream(inputpath);
         ObjectInputStream in = new ObjectInputStream(listIn);
-        ArrayList<Integer> list = (ArrayList<Integer>) in.readObject();
+        MyList<Integer> list = (MyList<Integer>) in.readObject();
         in.close();
         listIn.close();
         return list;
     }
 
-    Boolean writeLZWCompressToFile(ArrayList<Integer> data, String path) throws IOException {
+    public Boolean writeLZWCompressToFile(MyList<Integer> data, String path) throws IOException {
         try {
             File lzwFile = new File(path + ".lzw");
             FileOutputStream out = new FileOutputStream(lzwFile);
@@ -157,11 +163,12 @@ public class FileReaderWriter {
             writer.close();
             return true;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
     }
 
-    String readTextFromFile(String filepath) throws FileNotFoundException {
+    public String readTextFromFile(String filepath) throws FileNotFoundException {
         String result = "";
 
         File file = new File(filepath);
