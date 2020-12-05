@@ -4,6 +4,7 @@
 package compressionAlgorithms;
 
 import java.io.IOException;
+import compressionAlgorithms.algorithms.Huffman;
 
 public class App {
 

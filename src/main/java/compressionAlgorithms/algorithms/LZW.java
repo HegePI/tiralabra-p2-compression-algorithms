@@ -1,7 +1,8 @@
-package compressionAlgorithms;
+package compressionAlgorithms.algorithms;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.datastructures.MyList;
 
 public class LZW {
 
@@ -17,10 +18,10 @@ public class LZW {
      * @throws ClassNotFoundException
      * @throws IOException            if to be compressed file is not found
      */
-    Boolean compress(String file) throws ClassNotFoundException, IOException {
+    public Boolean compress(String file) throws ClassNotFoundException, IOException {
         FileReaderWriter frw = new FileReaderWriter();
         String text = frw.readBitsFromFile(file);
-        ArrayList<Integer> compressedData = constructLZWCompress(text);
+        MyList<Integer> compressedData = constructLZWCompress(text);
         String outputPath = file.split("\\.")[0];
         return frw.writeLZWCompressToFile(compressedData, outputPath);
     }
@@ -32,9 +33,9 @@ public class LZW {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    Boolean deCompress(String file) throws IOException, ClassNotFoundException {
+    public Boolean deCompress(String file) throws IOException, ClassNotFoundException {
         FileReaderWriter frw = new FileReaderWriter();
-        ArrayList<Integer> compress = frw.readLZWCompressFromFile(file);
+        MyList<Integer> compress = frw.readLZWCompressFromFile(file);
         String originalText = constructOriginalText(compress);
         String outputPath = file.split("\\.")[0] + ".txt";
         return frw.writeTextToFile(outputPath, originalText);
@@ -46,29 +47,31 @@ public class LZW {
      * @param text
      * @return
      */
-    ArrayList<Integer> constructLZWCompress(String text) {
-        ArrayList<String> list = new ArrayList<>();
+    public MyList<Integer> constructLZWCompress(String text) {
+        MyList<String> substrings = new MyList<>();
         String subString = "";
-        ArrayList<Integer> result = new ArrayList<>();
+        MyList<Integer> result = new MyList<>();
         for (Character c : text.toCharArray()) {
             subString = subString + c;
+            System.out.println(subString);
             if (subString.length() > 1) {
-                if (!list.contains(subString)) {
-                    list.add(subString);
+                if (!substrings.contains(subString)) {
+                    System.out.println(false);
+                    substrings.append(subString);
                     String out = subString.substring(0, subString.length() - 1);
                     if (out.length() > 1) {
-                        result.add(list.indexOf(out) + 256);
+                        result.append(substrings.getIndexOf(out) + 256);
                     } else {
-                        result.add(Integer.valueOf(out.charAt(0)));
+                        result.append(Integer.valueOf(out.charAt(0)));
                     }
                     subString = "" + c;
                 }
             }
         }
         if (subString.length() > 1) {
-            result.add(list.indexOf(subString) + 256);
+            result.append(substrings.getIndexOf(subString) + 256);
         } else {
-            result.add((int) subString.toCharArray()[0]);
+            result.append((int) subString.toCharArray()[0]);
         }
         return result;
     }
@@ -79,34 +82,34 @@ public class LZW {
      * @param compress Original text in coded format. Is a list of Integers.
      * @return Original text as string
      */
-    String constructOriginalText(ArrayList<Integer> compress) {
-        ArrayList<String> list = new ArrayList<>();
+    public String constructOriginalText(MyList<Integer> compress) {
+        MyList<String> substrings = new MyList<>();
         String result = "";
         Integer old = compress.get(0);
         char c = (char) old.intValue();
         result = result + c;
         String subString = "";
 
-        for (int i = 1; i < compress.size(); i++) {
+        for (int i = 1; i < compress.getSize(); i++) {
             Integer next = compress.get(i);
-            if (next > (255 + list.size())) {
+            if (next > (255 + substrings.getSize())) {
                 subString = "" + (char) old.intValue();
                 subString = subString + c;
             } else {
                 if (next < 256) {
                     subString = "" + (char) next.intValue();
                 } else {
-                    subString = list.get(next - 256);
+                    subString = substrings.get(next - 256);
                 }
             }
             result = result + subString;
             c = subString.toCharArray()[0];
             if (old.intValue() < 256) {
                 String oldAndC = "" + (char) old.intValue() + c;
-                list.add((oldAndC));
+                substrings.append((oldAndC));
             } else {
-                String oldAndC = list.get(old - 256) + c;
-                list.add((oldAndC));
+                String oldAndC = substrings.get(old - 256) + c;
+                substrings.append((oldAndC));
             }
 
             old = next;
