@@ -27,7 +27,6 @@ public class MyHashMap<K, V> {
      * @return true if present, false otherwise
      */
     public boolean containsKey(K key) {
-        System.out.println(key);
         if (key == null) {
             return false;
         }
@@ -36,8 +35,6 @@ public class MyHashMap<K, V> {
             MyHashMapEntry<K, V> entry = entryTable[getIndexOf(key)];
             if (entry != null) {
                 while (true) {
-                    System.out.println(
-                            entry.getKey() + " : " + key + " : " + (entry.keysAreSame(key)));
                     if (entry.keysAreSame(key)) {
                         return true;
                     } else {

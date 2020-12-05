@@ -37,15 +37,9 @@ public class LZWTest {
         MyList<Integer> list = lzw.constructLZWCompress("BABAABAAA");
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(66, 65, 256, 257, 65, 260));
 
-        for (int i = 0; i < list.getSize(); i++) {
-            System.out.println(list.get(i));
-        }
-
         boolean same = true;
 
         for (int i = 0; i < list.getSize(); i++) {
-            System.out.println(i + ", " + list.get(i) + " : " + expected.get(i));
-            System.out.println(list.get(i) == expected.get(i));
             if (list.get(i).intValue() != expected.get(i).intValue()) {
                 same = false;
                 break;
@@ -57,10 +51,6 @@ public class LZWTest {
     @Test
     public void testDeConstructLZWCompress() throws IOException {
         MyList<Integer> codes = lzw.constructLZWCompress("abraabraabraabra");
-
-        for (int i = 0; i < codes.getSize(); i++) {
-            System.out.println(codes.get(i));
-        }
 
         assertEquals("abraabraabraabra", lzw.constructOriginalText(codes));
     }
