@@ -1,4 +1,4 @@
-package compressionAlgorithms.datastructures;
+package compressionAlgorithms.dataStructures;
 
 import java.io.Serializable;
 

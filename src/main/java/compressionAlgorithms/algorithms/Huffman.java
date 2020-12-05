@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.PriorityQueue;
 import compressionAlgorithms.IO.FileReaderWriter;
-import compressionAlgorithms.datastructures.Node;
+import compressionAlgorithms.dataStructures.Node;
 
 public class Huffman {
 

@@ -1,4 +1,4 @@
-package compressionAlgorithms.datastructures;
+package compressionAlgorithms.dataStructures;
 
 public class MyHashMap<K, V> {
 
@@ -34,7 +34,7 @@ public class MyHashMap<K, V> {
         try {
             MyHashMapEntry<K, V> entry = entryTable[getIndexOf(key)];
             if (entry != null) {
-                while (true) {
+                while (true && entry != null) {
                     if (entry.keysAreSame(key)) {
                         return true;
                     } else {
@@ -59,10 +59,12 @@ public class MyHashMap<K, V> {
         int index = getIndexOf(newEntry.getKey());
         if (entryTable[index] == null) {
             entryTable[index] = newEntry;
+            entries++;
         } else {
             MyHashMapEntry<K, V> previousEntry = entryTable[index];
             newEntry.setNextEntry(previousEntry);
             entryTable[index] = newEntry;
+            entries++;
         }
     }
 

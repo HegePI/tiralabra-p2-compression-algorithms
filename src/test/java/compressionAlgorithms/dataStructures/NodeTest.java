@@ -1,8 +1,7 @@
-package compressionAlgorithms;
+package compressionAlgorithms.dataStructures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import compressionAlgorithms.datastructures.Node;
 
 public class NodeTest {
 

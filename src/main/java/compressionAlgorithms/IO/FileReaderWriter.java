@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
-import compressionAlgorithms.datastructures.MyList;
+import compressionAlgorithms.dataStructures.MyList;
 
 public class FileReaderWriter {
 
