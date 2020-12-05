@@ -1,4 +1,4 @@
-package compressionAlgorithms;
+package compressionAlgorithms.IO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
@@ -7,9 +7,8 @@ import java.io.IOException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import compressionAlgorithms.IO.FileReaderWriter;
 import compressionAlgorithms.algorithms.Huffman;
-import compressionAlgorithms.datastructures.MyList;
+import compressionAlgorithms.dataStructures.MyList;
 
 public class FileReaderWriterTest {
 
@@ -129,8 +128,7 @@ public class FileReaderWriterTest {
             list.append(i);
         }
 
-        Boolean success =
-                frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
+        frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
 
         MyList<Integer> listFromFile =
                 frw.readLZWCompressFromFile("src/test/resources/fileReaderWriterTest.lzw");

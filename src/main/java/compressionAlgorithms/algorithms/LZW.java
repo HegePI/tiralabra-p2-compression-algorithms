@@ -2,9 +2,9 @@ package compressionAlgorithms.algorithms;
 
 import java.io.IOException;
 import compressionAlgorithms.IO.FileReaderWriter;
-import compressionAlgorithms.datastructures.MyHashMap;
-import compressionAlgorithms.datastructures.MyHashMapEntry;
-import compressionAlgorithms.datastructures.MyList;
+import compressionAlgorithms.dataStructures.MyHashMap;
+import compressionAlgorithms.dataStructures.MyHashMapEntry;
+import compressionAlgorithms.dataStructures.MyList;
 
 public class LZW {
 

@@ -1,4 +1,4 @@
-package compressionAlgorithms;
+package compressionAlgorithms.algorithms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.FileNotFoundException;
@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import compressionAlgorithms.algorithms.Huffman;
-import compressionAlgorithms.datastructures.Node;
+import compressionAlgorithms.dataStructures.Node;
 
 public class HuffmanTest {
 

@@ -1,4 +1,4 @@
-package compressionAlgorithms;
+package compressionAlgorithms.algorithms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.File;
@@ -11,8 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import compressionAlgorithms.IO.FileReaderWriter;
-import compressionAlgorithms.algorithms.LZW;
-import compressionAlgorithms.datastructures.MyList;
+import compressionAlgorithms.dataStructures.MyList;
 
 public class LZWTest {
 

@@ -1,9 +1,7 @@
-package compressionAlgorithms;
+package compressionAlgorithms.dataStructures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import compressionAlgorithms.datastructures.MyHashMap;
-import compressionAlgorithms.datastructures.MyHashMapEntry;
 
 public class MyHashMapTest {
 
@@ -34,5 +32,31 @@ public class MyHashMapTest {
         }
 
         assertEquals(true, success);
+    }
+
+    @Test
+    public void testGetSize() {
+        String[] entries = {"Abba", "Judas priest", "Gorillaz", "Turmion kätilöt"};
+
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+
+        for (String s : entries) {
+            map.insertEntry(new MyHashMapEntry<String, Integer>(s, 10));
+        }
+
+        assertEquals(4, map.getSize());
+    }
+
+    @Test
+    public void testContainsKeyTrue() {
+        String[] entries = {"Abba", "Judas priest", "Gorillaz", "Turmion kätilöt"};
+
+        MyHashMap<String, Integer> map = new MyHashMap<>();
+
+        for (String s : entries) {
+            map.insertEntry(new MyHashMapEntry<String, Integer>(s, 10));
+        }
+
+        assertEquals(true, map.containsKey("Gorillaz"));
     }
 }
