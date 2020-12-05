@@ -59,7 +59,6 @@ public class HashMapImpl<K, V> {
     }
 
     public int size() {
-        // TODO Auto-generated method stub
         return this.size;
     }
 
