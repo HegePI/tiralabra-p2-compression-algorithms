@@ -38,11 +38,9 @@ public class MyList<K> implements Serializable {
     }
 
     public boolean contains(K object) {
-        System.out.println("hello " + this.list);
         if (this.list instanceof String[] && object instanceof String) {
             for (String s : (String[]) this.list) {
                 if (stringEquality((String) object, s)) {
-                    System.out.println("hello");
                     return true;
                 }
             }

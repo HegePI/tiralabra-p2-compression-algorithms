@@ -2,6 +2,8 @@ package compressionAlgorithms.algorithms;
 
 import java.io.IOException;
 import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.datastructures.MyHashMap;
+import compressionAlgorithms.datastructures.MyHashMapEntry;
 import compressionAlgorithms.datastructures.MyList;
 
 public class LZW {
@@ -48,19 +50,19 @@ public class LZW {
      * @return
      */
     public MyList<Integer> constructLZWCompress(String text) {
-        MyList<String> substrings = new MyList<>();
+        MyHashMap<String, Integer> substrings = new MyHashMap<>();
+        int index = 256;
         String subString = "";
         MyList<Integer> result = new MyList<>();
         for (Character c : text.toCharArray()) {
             subString = subString + c;
-            System.out.println(subString);
             if (subString.length() > 1) {
-                if (!substrings.contains(subString)) {
-                    System.out.println(false);
-                    substrings.append(subString);
+                if (!substrings.containsKey(subString)) {
+                    substrings.insertEntry(new MyHashMapEntry<String, Integer>(subString, index));
+                    index++;
                     String out = subString.substring(0, subString.length() - 1);
                     if (out.length() > 1) {
-                        result.append(substrings.getIndexOf(out) + 256);
+                        result.append(substrings.getValue(out));
                     } else {
                         result.append(Integer.valueOf(out.charAt(0)));
                     }
@@ -69,7 +71,7 @@ public class LZW {
             }
         }
         if (subString.length() > 1) {
-            result.append(substrings.getIndexOf(subString) + 256);
+            result.append(substrings.getValue(subString));
         } else {
             result.append((int) subString.toCharArray()[0]);
         }

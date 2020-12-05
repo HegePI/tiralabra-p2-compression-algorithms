@@ -31,7 +31,6 @@ public class Huffman {
         if (filePath.split("\\.")[1].equals("huff")) {
             FileReaderWriter frw = new FileReaderWriter();
             String bits = frw.readBitsFromFile(filePath);
-            System.out.println(bits);
             int[] charFrequencies = frw.readFrequenciesFromFile(filePath.split("\\.")[0] + ".map");
             Node root = constructHuffmanTree(charFrequencies);
             String originalText = getOriginalText(bits, root);
