@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import compressionAlgorithms.algorithms.Huffman;
+import compressionAlgorithms.datastructures.Node;
 
 public class HuffmanTest {
 

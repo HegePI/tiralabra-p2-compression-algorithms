@@ -10,6 +10,9 @@ import java.util.Scanner;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.algorithms.LZW;
+import compressionAlgorithms.datastructures.MyList;
 
 public class LZWTest {
 
@@ -31,14 +34,35 @@ public class LZWTest {
 
     @Test
     public void testConstructLZWCompress() {
-        assertEquals(Arrays.asList(66, 65, 256, 257, 65, 260),
-                lzw.constructLZWCompress("BABAABAAA"));
+        MyList<Integer> list = lzw.constructLZWCompress("BABAABAAA");
+        ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(66, 65, 256, 257, 65, 260));
+
+        for (int i = 0; i < list.getSize(); i++) {
+            System.out.println(list.get(i));
+        }
+
+        boolean same = true;
+
+        for (int i = 0; i < list.getSize(); i++) {
+            System.out.println(i + ", " + list.get(i) + " : " + expected.get(i));
+            System.out.println(list.get(i) == expected.get(i));
+            if (list.get(i).intValue() != expected.get(i).intValue()) {
+                same = false;
+                break;
+            }
+        }
+        assertEquals(true, same);
     }
 
     @Test
     public void testDeConstructLZWCompress() throws IOException {
-        ArrayList<Integer> codes = lzw.constructLZWCompress("BABAABAAA");
-        assertEquals("BABAABAAA", lzw.constructOriginalText(codes));
+        MyList<Integer> codes = lzw.constructLZWCompress("abraabraabraabra");
+
+        for (int i = 0; i < codes.getSize(); i++) {
+            System.out.println(codes.get(i));
+        }
+
+        assertEquals("abraabraabraabra", lzw.constructOriginalText(codes));
     }
 
     @Test
@@ -51,7 +75,7 @@ public class LZWTest {
         }
         reader.close();
 
-        ArrayList<Integer> codes = lzw.constructLZWCompress(text);
+        MyList<Integer> codes = lzw.constructLZWCompress(text);
         assertEquals(text, lzw.constructOriginalText(codes));
     }
 
@@ -65,7 +89,7 @@ public class LZWTest {
         }
         reader.close();
 
-        ArrayList<Integer> codes = lzw.constructLZWCompress(text);
+        MyList<Integer> codes = lzw.constructLZWCompress(text);
         assertEquals(text, lzw.constructOriginalText(codes));
     }
 
@@ -73,10 +97,14 @@ public class LZWTest {
     public void testWriteCompressToFile() throws IOException {
         FileReaderWriter frw = new FileReaderWriter();
 
-        Boolean succes = frw.writeLZWCompressToFile(
-                new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-                "src/test/resources/lzwCompress");
-        assertEquals(true, succes);
+        MyList<Integer> list = new MyList<>();
+
+        for (int i = 0; i < 10; i++) {
+            list.append(i);
+        }
+
+        Boolean success = frw.writeLZWCompressToFile(list, "src/test/resources/lzwCompress");
+        assertEquals(true, success);
 
         File newFile = new File("src/test/resources/lzwCompress.lzw");
         assertEquals(true, newFile.exists());
@@ -86,9 +114,13 @@ public class LZWTest {
     public void testReadCompressFromFile() throws IOException, ClassNotFoundException {
         FileReaderWriter frw = new FileReaderWriter();
 
-        Boolean succes = frw.writeLZWCompressToFile(
-                new ArrayList<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)),
-                "src/test/resources/lzwCompress");
+        MyList<Integer> list = new MyList<>();
+
+        for (int i = 0; i < 10; i++) {
+            list.append(i);
+        }
+
+        Boolean succes = frw.writeLZWCompressToFile(list, "src/test/resources/lzwCompress");
 
         assertEquals(true, succes);
 
@@ -96,8 +128,17 @@ public class LZWTest {
 
         assertEquals(true, newFile.exists());
 
-        ArrayList<Integer> list = frw.readLZWCompressFromFile("src/test/resources/lzwCompress.lzw");
+        MyList<Integer> listFromFile =
+                frw.readLZWCompressFromFile("src/test/resources/lzwCompress.lzw");
 
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), list);
+        boolean same = true;
+        for (int i = 0; i < 10; i++) {
+            if (list.get(i).intValue() != listFromFile.get(i).intValue()) {
+                same = false;
+                break;
+            }
+        }
+
+        assertEquals(true, same);
     }
 }

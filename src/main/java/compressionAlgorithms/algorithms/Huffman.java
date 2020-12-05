@@ -1,15 +1,17 @@
-package compressionAlgorithms;
+package compressionAlgorithms.algorithms;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.PriorityQueue;
+import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.datastructures.Node;
 
 public class Huffman {
 
     public Huffman() {
     }
 
-    Boolean compress(String filePath) throws IOException, ClassNotFoundException {
+    public Boolean compress(String filePath) throws IOException, ClassNotFoundException {
         if (filePath.split("\\.")[1].equals("txt")) {
             String outPath = filePath.split("\\.")[0];
             FileReaderWriter frw = new FileReaderWriter();
@@ -25,7 +27,7 @@ public class Huffman {
         return false;
     }
 
-    Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
+    public Boolean deCompress(String filePath) throws ClassNotFoundException, IOException {
         if (filePath.split("\\.")[1].equals("huff")) {
             FileReaderWriter frw = new FileReaderWriter();
             String bits = frw.readBitsFromFile(filePath);
@@ -39,7 +41,7 @@ public class Huffman {
         return false;
     }
 
-    int[] countCharFrequency(String text) throws FileNotFoundException {
+    public int[] countCharFrequency(String text) throws FileNotFoundException {
         int[] frequencies = new int[256];
         for (Character c : text.toCharArray()) {
             frequencies[c]++;
@@ -47,7 +49,7 @@ public class Huffman {
         return frequencies;
     }
 
-    Node constructHuffmanTree(int[] frequencies) {
+    public Node constructHuffmanTree(int[] frequencies) {
         PriorityQueue<Node> nodes = new PriorityQueue<>();
         for (int c = 0; c < 256; c++) {
             if (frequencies[c] > 0) {
@@ -63,7 +65,7 @@ public class Huffman {
         return nodes.poll();
     }
 
-    String[] constructBitRepresentations(Node node) {
+    public String[] constructBitRepresentations(Node node) {
         String[] bitRepresentations = new String[256];
         return searchChars(node, "", bitRepresentations);
     }
@@ -78,7 +80,7 @@ public class Huffman {
         return representations;
     }
 
-    String getBits(String text, String[] representations) throws FileNotFoundException {
+    public String getBits(String text, String[] representations) throws FileNotFoundException {
         String result = "";
         for (Character c : text.toCharArray()) {
             result = result + representations[c];
@@ -86,7 +88,7 @@ public class Huffman {
         return result;
     }
 
-    String getOriginalText(String bits, Node root) {
+    public String getOriginalText(String bits, Node root) {
         String result = "";
 
         Node current = root;
