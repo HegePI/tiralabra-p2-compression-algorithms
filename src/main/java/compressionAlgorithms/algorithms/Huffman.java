@@ -2,8 +2,8 @@ package compressionAlgorithms.algorithms;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.PriorityQueue;
 import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.dataStructures.MyMinHeap;
 import compressionAlgorithms.dataStructures.Node;
 
 public class Huffman {
@@ -49,19 +49,21 @@ public class Huffman {
     }
 
     public Node constructHuffmanTree(int[] frequencies) {
-        PriorityQueue<Node> nodes = new PriorityQueue<>();
+        MyMinHeap nodes = new MyMinHeap();
         for (int c = 0; c < 256; c++) {
             if (frequencies[c] > 0) {
-                nodes.add(new Node((char) c, frequencies[c]));
+                nodes.insertNode(new Node((char) c, frequencies[c]));
             }
         }
 
-        while (nodes.size() > 1) {
-            Node first = nodes.poll();
-            Node second = nodes.poll();
-            nodes.add(new Node(first, second));
+        nodes.minHeap();
+
+        while (nodes.getSize() > 1) {
+            Node first = nodes.getFirstNode();
+            Node second = nodes.getFirstNode();
+            nodes.insertNode(new Node(first, second));
         }
-        return nodes.poll();
+        return nodes.getFirstNode();
     }
 
     public String[] constructBitRepresentations(Node node) {
