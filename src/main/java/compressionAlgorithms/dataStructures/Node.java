@@ -20,6 +20,10 @@ public class Node implements Comparable<Node> {
         this.value = leftNode.value + rightNode.value;
     }
 
+    public Node(Integer value) {
+        this.value = value;
+    }
+
     public Integer getValue() {
         return this.value;
     }
@@ -49,5 +53,17 @@ public class Node implements Comparable<Node> {
             return 1;
         }
         return -1;
+    }
+
+    @Override
+    public String toString() {
+        if (this.character != null && this.value != null) {
+            return "(Char: " + this.character + ", value: " + this.value + ")";
+        } else if (this.character == null && this.value != null && this.leftChildNode != null
+                && this.rightChildNode != null) {
+            return "(leftchild: " + this.leftChildNode.toString() + ", value: " + this.value
+                    + ", rightchild: " + this.rightChildNode.toString() + ")";
+        }
+        return "()";
     }
 }

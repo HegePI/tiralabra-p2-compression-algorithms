@@ -45,10 +45,21 @@ public class HuffmanTest {
     }
 
     @Test
-    public void testConstructBitRepresentations() throws FileNotFoundException {
-        String[] map = hf.constructBitRepresentations(
+    public void testConstructBitRepresentations1() throws FileNotFoundException {
+        String[] charBits = hf.constructBitRepresentations(
                 hf.constructHuffmanTree(hf.countCharFrequency("Hello, counter!")));
-        assertEquals("111", map['o']);
+        assertEquals("000", charBits['n']);
+        assertEquals("100", charBits['l']);
+        assertEquals("110", charBits['e']);
+        assertEquals("111", charBits['o']);
+        assertEquals("0110", charBits['r']);
+        assertEquals("1010", charBits[' ']);
+        assertEquals("0111", charBits['!']);
+        assertEquals("0101", charBits['u']);
+        assertEquals("0010", charBits['c']);
+        assertEquals("1011", charBits[',']);
+        assertEquals("0100", charBits['t']);
+        assertEquals("0011", charBits['H']);
     }
 
     @Test
@@ -57,7 +68,7 @@ public class HuffmanTest {
         Node root = hf.constructHuffmanTree(frequencies);
         String[] bitRepresentations = hf.constructBitRepresentations(root);
         String bits = hf.getBits("Hello, counter!", bitRepresentations);
-        assertEquals("01011010010011111001100011011110110000011110101001100", bits);
+        assertEquals("00111101001001111011101000101110101000010011001100111", bits);
     }
 
     @Test
