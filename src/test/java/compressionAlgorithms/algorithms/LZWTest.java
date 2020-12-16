@@ -92,7 +92,8 @@ public class LZWTest {
             list.append(i);
         }
 
-        Boolean success = frw.writeLZWCompressToFile(list, "src/test/resources/lzwCompress");
+        Boolean success =
+                frw.writeLZWCompressToFile(list, new File("src/test/resources/lzwCompress.lzw"));
         assertEquals(true, success);
 
         File newFile = new File("src/test/resources/lzwCompress.lzw");
@@ -109,7 +110,8 @@ public class LZWTest {
             list.append(i);
         }
 
-        Boolean succes = frw.writeLZWCompressToFile(list, "src/test/resources/lzwCompress");
+        Boolean succes =
+                frw.writeLZWCompressToFile(list, new File("src/test/resources/lzwCompress.lzw"));
 
         assertEquals(true, succes);
 
@@ -118,7 +120,7 @@ public class LZWTest {
         assertEquals(true, newFile.exists());
 
         MyList<Integer> listFromFile =
-                frw.readLZWCompressFromFile("src/test/resources/lzwCompress.lzw");
+                frw.readLZWCompressFromFile(new File("src/test/resources/lzwCompress.lzw"));
 
         boolean same = true;
         for (int i = 0; i < 10; i++) {

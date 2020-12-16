@@ -1,6 +1,7 @@
 package compressionAlgorithms.algorithms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,18 +17,6 @@ public class HuffmanTest {
     @BeforeAll
     public static void init() {
         hf = new Huffman();
-    }
-
-    @Test
-    public void testHuffmanCompressWithInCorrectFileExtension()
-            throws IOException, ClassNotFoundException {
-        assertEquals(false, hf.compress("testFile.csv"));
-    }
-
-    @Test
-    public void testHuffmanDecompressWithInCorrectFileExtension()
-            throws ClassNotFoundException, IOException {
-        assertEquals(false, hf.deCompress("testFile.csv"));
     }
 
     @Test
