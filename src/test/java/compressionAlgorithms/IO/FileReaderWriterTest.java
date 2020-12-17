@@ -64,7 +64,8 @@ public class FileReaderWriterTest {
     @Test
     public void testReadBitsFromFile() throws ClassNotFoundException, IOException {
         String bits = "1010101010101000010110111111";
-        String bitsFromFile = frw.readBitsFromFile("src/test/resources/fileReaderWriterTest.huff");
+        String bitsFromFile =
+                frw.readBitsFromFile(new File("src/test/resources/fileReaderWriterTest.huff"));
 
         assertEquals(bits, bitsFromFile);
     }
@@ -90,7 +91,8 @@ public class FileReaderWriterTest {
 
     @Test
     public void testWriteTextToFile() throws IOException {
-        Boolean success = frw.writeTextToFile("src/test/resources/fileReaderWriterTest", "Hello");
+        Boolean success = frw.writeTextToFile(
+                new File("src/test/resources/fileReaderWriterTest-reconstruct.txt"), "Hello");
         assertEquals(true, success);
 
         File newFile = new File("src/test/resources/fileReaderWriterTest-reconstruct.txt");
@@ -99,7 +101,7 @@ public class FileReaderWriterTest {
 
     @Test
     public void testReadTextFromFile() throws FileNotFoundException {
-        String text = frw.readTextFromFile("src/test/resources/small.txt");
+        String text = frw.readTextFromFile(new File("src/test/resources/small.txt"));
         assertEquals("Hello, Huffman and LZW!", text);
     }
 
@@ -111,8 +113,8 @@ public class FileReaderWriterTest {
             list.append(i);
         }
 
-        Boolean success =
-                frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
+        Boolean success = frw.writeLZWCompressToFile(list,
+                new File("src/test/resources/fileReaderWriterTest.lzw"));
         assertEquals(true, success);
 
         File newFile = new File("src/test/resources/fileReaderWriterTest.lzw");
@@ -128,10 +130,10 @@ public class FileReaderWriterTest {
             list.append(i);
         }
 
-        frw.writeLZWCompressToFile(list, "src/test/resources/fileReaderWriterTest");
+        frw.writeLZWCompressToFile(list, new File("src/test/resources/fileReaderWriterTest.lzw"));
 
-        MyList<Integer> listFromFile =
-                frw.readLZWCompressFromFile("src/test/resources/fileReaderWriterTest.lzw");
+        MyList<Integer> listFromFile = frw
+                .readLZWCompressFromFile(new File("src/test/resources/fileReaderWriterTest.lzw"));
 
         boolean same = true;
         for (int i = 0; i < 10; i++) {

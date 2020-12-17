@@ -73,7 +73,7 @@ public class FileReaderWriter {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public String readBitsFromFile(String inputPath) throws IOException, ClassNotFoundException {
+    public String readBitsFromFile(File file) throws IOException, ClassNotFoundException {
         // FileInputStream fin = new FileInputStream(inputPath);
         // String bits = "";
         // for (Byte b : fin.readAllBytes()) {
@@ -85,19 +85,14 @@ public class FileReaderWriter {
         // fin.close();
         // return bits;
         String result = "";
-        try {
-            File f = new File(inputPath);
-            Scanner reader = new Scanner(f);
-            while (reader.hasNext()) {
-                result = result + reader.nextLine();
-            }
-            reader.close();
-            return result;
+        Scanner reader = new Scanner(file);
 
-        } catch (Exception e) {
-            throw e;
+        while (reader.hasNext()) {
+            result = result + reader.nextLine();
         }
 
+        reader.close();
+        return result;
     }
 
     /**
@@ -128,25 +123,22 @@ public class FileReaderWriter {
      * @return
      * @throws IOException
      */
-    public Boolean writeTextToFile(String outputPath, String text) throws IOException {
+    public Boolean writeTextToFile(File file, String text) throws IOException {
 
-        File newFile = new File(outputPath + "-reconstruct.txt");
         try {
-            newFile.createNewFile();
-            FileWriter file = new FileWriter(outputPath + "-reconstruct.txt");
-            file.write(text);
-            file.close();
+            file.createNewFile();
+            FileWriter fw = new FileWriter(file);
+            fw.write(text);
+            fw.close();
+            return true;
         } catch (Exception e) {
-            System.out.println(e);
             return false;
         }
-
-        return true;
     }
 
-    public MyList<Integer> readLZWCompressFromFile(String inputpath)
+    public MyList<Integer> readLZWCompressFromFile(File file)
             throws IOException, ClassNotFoundException {
-        FileInputStream listIn = new FileInputStream(inputpath);
+        FileInputStream listIn = new FileInputStream(file);
         ObjectInputStream in = new ObjectInputStream(listIn);
         MyList<Integer> list = (MyList<Integer>) in.readObject();
         in.close();
@@ -154,24 +146,20 @@ public class FileReaderWriter {
         return list;
     }
 
-    public Boolean writeLZWCompressToFile(MyList<Integer> data, String path) throws IOException {
+    public Boolean writeLZWCompressToFile(MyList<Integer> data, File file) throws IOException {
         try {
-            File lzwFile = new File(path + ".lzw");
-            FileOutputStream out = new FileOutputStream(lzwFile);
+            FileOutputStream out = new FileOutputStream(file);
             ObjectOutputStream writer = new ObjectOutputStream(out);
             writer.writeObject(data);
             writer.close();
             return true;
         } catch (Exception e) {
-            System.out.println(e);
             return false;
         }
     }
 
-    public String readTextFromFile(String filepath) throws FileNotFoundException {
+    public String readTextFromFile(File file) throws FileNotFoundException {
         String result = "";
-
-        File file = new File(filepath);
         Scanner reader = new Scanner(file);
 
         while (reader.hasNext()) {

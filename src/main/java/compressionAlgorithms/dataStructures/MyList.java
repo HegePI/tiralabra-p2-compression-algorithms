@@ -79,4 +79,20 @@ public class MyList<K> implements Serializable {
         return arg1.equals(arg2);
     }
 
+    @Override
+    public String toString() {
+        String result = "[";
+        if (this.entries == 0) {
+            result = result + "]";
+            return result;
+        }
+
+        for (int i = 0; i < this.entries - 1; i++) {
+            result = result + this.list[i] + ", ";
+        }
+        result = result + this.list[this.entries - 1] + "]";
+        return result;
+
+    }
+
 }
