@@ -3,6 +3,7 @@ package compressionAlgorithms.algorithms;
 import java.io.File;
 import java.io.IOException;
 import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.benchmark.BenchmarkObject;
 import compressionAlgorithms.dataStructures.MyHashMap;
 import compressionAlgorithms.dataStructures.MyHashMapEntry;
 import compressionAlgorithms.dataStructures.MyList;
@@ -29,15 +30,36 @@ public class LZW {
         return frw.writeLZWCompressToFile(compressedData, lzwFile);
     }
 
-    public Double compressAndReturnSaveRatio(File file) throws ClassNotFoundException, IOException {
+    /**
+     * Function, which benchmarks the effectiveness of LZW -algorithm by compressing and
+     * decompressing the given files content and returns results as BenchmarkObject
+     * 
+     * @param file File, which is to be compressed and decompressed
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    public BenchmarkObject compressAndReturnBenchmarkObject(File file)
+            throws ClassNotFoundException, IOException {
         FileReaderWriter frw = new FileReaderWriter();
         String text = frw.readBitsFromFile(file);
-        MyList<Integer> compressedData = constructLZWCompress(text);
 
-        return (1 - (double) (compressedData.getSize() * 8) / (double) (text.length() * 8)) * 100;
+        Long compressStart = System.nanoTime();
+        MyList<Integer> compressedData = constructLZWCompress(text);
+        Long compressEnd = System.nanoTime();
+
+        Double savedSpace =
+                (1 - (double) (compressedData.getSize() * 8) / (double) (text.length() * 8)) * 100;
+
+        Long deCompressStart = System.nanoTime();
+        constructOriginalText(compressedData);
+        Long deCompressEnd = System.nanoTime();
+        return new BenchmarkObject((compressEnd - compressStart) / 10e9,
+                (deCompressEnd - deCompressStart) / 10e9, savedSpace);
     }
 
     /**
+     * Function, which decompresses given files content. Must be .lzw file
      * 
      * @param file
      * @return

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.benchmark.BenchmarkObject;
 import compressionAlgorithms.dataStructures.MyMinHeap;
 import compressionAlgorithms.dataStructures.Node;
 
@@ -12,6 +13,14 @@ public class Huffman {
     public Huffman() {
     }
 
+    /**
+     * Compresses the content of a given file and saves the result to a new file
+     * 
+     * @param file To be comrpessed file
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public Boolean compressAndSaveToFile(File file) throws IOException, ClassNotFoundException {
 
         FileReaderWriter frw = new FileReaderWriter();
@@ -25,18 +34,47 @@ public class Huffman {
         return frw.writeBitsToFile(outPath, bits, charFrequencies);
     }
 
-    public Double compressAndReturnSaveRatio(File file) throws FileNotFoundException {
+    /**
+     * Benchmarks the effectiveness of Huffman -algorithm by compressing and decompressing the given
+     * files content and returns results as BenchmarkObject
+     * 
+     * @param file File, which is to be compressed and decompressed
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    public BenchmarkObject compressAndReturnBenchmarkObject(File file)
+            throws FileNotFoundException {
         FileReaderWriter frw = new FileReaderWriter();
         String text = frw.readTextFromFile(file);
 
+        Long compressStart = System.nanoTime();
         int[] charFrequencies = countCharFrequency(text);
         Node rootNode = constructHuffmanTree(charFrequencies);
         String[] charsBitRepresentations = constructBitRepresentations(rootNode);
         String bits = getBits(text, charsBitRepresentations);
-        double ratio = (1 - (double) bits.length() / (double) (text.length() * 8)) * 100;
-        return ratio;
+        Long compressEnd = System.nanoTime();
+
+        double savedSpace =
+                (1 - (double) bits.length() / (double) (text.getBytes().length * 8)) * 100;
+
+        Long deCompressStart = System.nanoTime();
+        Node root = constructHuffmanTree(charFrequencies);
+        getOriginalText(bits, root);
+        Long deCompressEnd = System.nanoTime();
+
+        return new BenchmarkObject((compressEnd - compressStart) / 10e9,
+                (deCompressEnd - deCompressStart) / 10e9, savedSpace);
     }
 
+    /**
+     * Decompresses the given files content and saves the result to a new file
+     * 
+     * @param file To be decompressed file
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public Boolean deCompressFile(File file) throws ClassNotFoundException, IOException {
         FileReaderWriter frw = new FileReaderWriter();
         String bits = frw.readBitsFromFile(file);
@@ -49,6 +87,13 @@ public class Huffman {
         return frw.writeTextToFile(reconstruct, originalText);
     }
 
+    /**
+     * Counts the frequencies of individual characters of a given text and returns a int[] as a
+     * result
+     * 
+     * @param text
+     * @return
+     */
     public int[] countCharFrequency(String text) {
         int[] frequencies = new int[256];
         for (Character c : text.toCharArray()) {
@@ -57,6 +102,12 @@ public class Huffman {
         return frequencies;
     }
 
+    /**
+     * Constructs the huffman tree from given character frequencies. Returns the root of the tree
+     * 
+     * @param frequencies
+     * @return
+     */
     public Node constructHuffmanTree(int[] frequencies) {
         MyMinHeap nodes = new MyMinHeap();
         for (int c = 0; c < 256; c++) {
@@ -75,11 +126,27 @@ public class Huffman {
         return nodes.getFirstNode();
     }
 
+    /**
+     * Creates for each individual character its respective bit representation. Takes root of a
+     * Huffman tree as a argument
+     * 
+     * @param node
+     * @return
+     */
     public String[] constructBitRepresentations(Node node) {
         String[] bitRepresentations = new String[256];
         return searchChars(node, "", bitRepresentations);
     }
 
+    /**
+     * Helper function, which recursively goes through the given huffman tree and creates bit
+     * representations for each individual character
+     * 
+     * @param node
+     * @param bits
+     * @param representations
+     * @return
+     */
     private String[] searchChars(Node node, String bits, String[] representations) {
         if (node.getCharacter() != null) {
             representations[node.getCharacter()] = bits;
@@ -90,6 +157,13 @@ public class Huffman {
         return representations;
     }
 
+    /**
+     * Creates the bit representation for a whole text
+     * 
+     * @param text            Given text
+     * @param representations Characters bit representations
+     * @return
+     */
     public String getBits(String text, String[] representations) {
         String result = "";
         for (Character c : text.toCharArray()) {
@@ -98,6 +172,13 @@ public class Huffman {
         return result;
     }
 
+    /**
+     * Creates the original text by traversing given huffman tree
+     * 
+     * @param bits
+     * @param root
+     * @return
+     */
     public String getOriginalText(String bits, Node root) {
         String result = "";
 
@@ -118,6 +199,12 @@ public class Huffman {
         return result;
     }
 
+    /**
+     * Compresses given text and returns its bit representations
+     * 
+     * @param text
+     * @return
+     */
     public String compressText(String text) {
         int[] freq = countCharFrequency(text);
         Node root = constructHuffmanTree(freq);

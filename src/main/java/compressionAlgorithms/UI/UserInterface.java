@@ -5,10 +5,17 @@ import java.io.IOException;
 import java.util.Scanner;
 import compressionAlgorithms.algorithms.Huffman;
 import compressionAlgorithms.algorithms.LZW;
+import compressionAlgorithms.benchmark.BenchmarkObject;
 import compressionAlgorithms.dataStructures.MyList;
 
 public class UserInterface {
 
+    /**
+     * Functions, which starts and runs UI
+     * 
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public void run() throws ClassNotFoundException, IOException {
         System.out.println("Welcome to use the compressor! \n");
 
@@ -46,6 +53,13 @@ public class UserInterface {
         reader.close();
     }
 
+    /**
+     * Functons, which prompts to the user the decompress dialog.
+     * 
+     * @param reader Takes Scanner object as an argument
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void deCompressFile(Scanner reader) throws IOException, ClassNotFoundException {
         System.out.println("Decompressing file...\n");
 
@@ -103,6 +117,13 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Function, which prompts to the user the compress file dialog
+     * 
+     * @param reader Takes Scanner object as argument
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public void compressFile(Scanner reader) throws ClassNotFoundException, IOException {
         System.out.println("Compressing file...\n");
         boolean quit = false;
@@ -190,6 +211,12 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Function, which prompts the compress input dialog to the user. Can be used to test algorithms
+     * ton the small inputs
+     * 
+     * @param reader Takes Scanner object as a argument
+     */
     public void compressInput(Scanner reader) {
         System.out.println("Compressing given input...\n");
 
@@ -232,6 +259,15 @@ public class UserInterface {
         }
     }
 
+    /**
+     * Function, which benchmarks Huffman and Lempel-Ziv-Welch algorithms. User gives path to the
+     * file which will be compressed by both algorithms and effectiveness of both algorithms is
+     * measured and can be compared
+     * 
+     * @param reader Takes Scanner object as an argument
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void benchmarkAlgorithms(Scanner reader) throws IOException, ClassNotFoundException {
         System.out.println("Benchmarkign algorithms...\n");
 
@@ -260,24 +296,29 @@ public class UserInterface {
             }
         }
         Huffman hf = new Huffman();
-        long huffmanStart = System.nanoTime();
-        double huffmanRatio = hf.compressAndReturnSaveRatio(file);
-        long huffmanEnd = System.nanoTime();
+        BenchmarkObject huffmanBenchmark = hf.compressAndReturnBenchmarkObject(file);
 
         LZW lzw = new LZW();
-        long lzwStart = System.nanoTime();
-        double lzwRatio = lzw.compressAndReturnSaveRatio(file);
-        long lzwEnd = System.nanoTime();
+        BenchmarkObject lzwBenchmark = lzw.compressAndReturnBenchmarkObject(file);
 
         System.out.println("Benchmarking results\n-----------------------------\n");
-        System.out.println(
-                "Huffman algorithm\n_________________\ntime: " + (huffmanEnd - huffmanStart) / 10e9
-                        + "s\nsaved space: " + Math.round(huffmanRatio * 1000) / 1000 + "%\n");
-        System.out.println("LZW -algorithm\n_________________\ntime: " + (lzwEnd - lzwStart) / 10e9
-                + "\nsaved space: " + Math.round(lzwRatio * 1000) / 1000 + "%\n");
+        System.out.println("Huffman algorithm\n_________________\nCompress time: "
+                + huffmanBenchmark.getCompressTime() + "s\nDecompress time: "
+                + huffmanBenchmark.getDeCompressTime() + "s\nsaved space: "
+                + huffmanBenchmark.getSavedSpace() + "%\n");
+        System.out.println("LZW -algorithm\n_________________\nCompress time: "
+                + lzwBenchmark.getCompressTime() + "\nDecompress time: "
+                + lzwBenchmark.getDeCompressTime() + "\nsaved space: "
+                + lzwBenchmark.getSavedSpace() + "%\n");
 
     }
 
+    /**
+     * Helper function, which prints results of a Huffman algorithm to readable format
+     * 
+     * @param text Users given input text which is compressed
+     * @param bits Result of compression
+     */
     private void huffmanResult(String text, String bits) {
         System.out.println("Original text: " + text);
         System.out.println("Bits : " + bits);
@@ -285,6 +326,12 @@ public class UserInterface {
         System.out.println("Space saved: " + huffmanSpaceSaved(text, bits) + "\n");
     }
 
+    /**
+     * Helper function, which prints results of a Lempel-Ziv-Welch algorithm to readable format
+     * 
+     * @param text Users given input text which is compressed
+     * @param bits Result of compression
+     */
     private void lzwResult(String text, MyList<Integer> list) {
         System.out.println("Original text: " + text);
         System.out.println("LZW compress: " + list.toString());
@@ -292,10 +339,24 @@ public class UserInterface {
         System.out.println("Space saved: " + lzwSpaceSaved(text, list) + "\n");
     }
 
+    /**
+     * Helper function which calculates the percentage of saved space of LZW -algorihtm
+     * 
+     * @param text Input text
+     * @param list Result list
+     * @return
+     */
     private String lzwSpaceSaved(String text, MyList<Integer> list) {
         return (1 - (double) (list.getSize() * 8) / (double) (text.length() * 8)) * 100 + "%";
     }
 
+    /**
+     * Helper function which calculates the percentage of saved space of LZW -algorihtm
+     * 
+     * @param text Input text
+     * @param bits Result bits
+     * @return
+     */
     private String huffmanSpaceSaved(String text, String bits) {
         return (1 - (double) bits.length() / (double) (text.length() * 8)) * 100 + "%";
 
