@@ -31,6 +31,23 @@ public class LZW {
     }
 
     /**
+     * Function, which decompresses given files content. Must be .lzw file
+     * 
+     * @param file
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public Boolean deCompressFile(File file) throws IOException, ClassNotFoundException {
+        FileReaderWriter frw = new FileReaderWriter();
+        MyList<Integer> compress = frw.readLZWCompressFromFile(file);
+        String originalText = constructOriginalText(compress);
+        File reconstruct =
+                new File(file.getCanonicalPath().split("\\.")[0] + "-lzw-reconstruct.txt");
+        return frw.writeTextToFile(reconstruct, originalText);
+    }
+
+    /**
      * Function, which benchmarks the effectiveness of LZW -algorithm by compressing and
      * decompressing the given files content and returns results as BenchmarkObject
      * 
@@ -56,23 +73,6 @@ public class LZW {
         Long deCompressEnd = System.nanoTime();
         return new BenchmarkObject((compressEnd - compressStart) / 10e9,
                 (deCompressEnd - deCompressStart) / 10e9, savedSpace);
-    }
-
-    /**
-     * Function, which decompresses given files content. Must be .lzw file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public Boolean deCompress(File file) throws IOException, ClassNotFoundException {
-        FileReaderWriter frw = new FileReaderWriter();
-        MyList<Integer> compress = frw.readLZWCompressFromFile(file);
-        String originalText = constructOriginalText(compress);
-        File reconstruct =
-                new File(file.getCanonicalPath().split("\\.")[0] + "-lzw-reconstruct.txt");
-        return frw.writeTextToFile(reconstruct, originalText);
     }
 
     /**

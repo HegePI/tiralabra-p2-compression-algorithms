@@ -106,7 +106,7 @@ public class UserInterface {
         } else {
             LZW lzw = new LZW();
             long start = System.nanoTime();
-            boolean success = lzw.deCompress(file);
+            boolean success = lzw.deCompressFile(file);
             long end = System.nanoTime();
             if (success) {
                 System.out.println("succesfully decompressed file...\n");
@@ -168,7 +168,7 @@ public class UserInterface {
                     System.out.println("Compressing using Huffman algorithm...\n");
                     Huffman hf = new Huffman();
                     long huffmanStart = System.nanoTime();
-                    boolean huffmanSuccess = hf.compressAndSaveToFile(file);
+                    boolean huffmanSuccess = hf.compressFile(file);
                     long huffmanEnd = System.nanoTime();
                     if (huffmanSuccess) {
                         System.out.println("succesfully compressed file...\n");

@@ -17,11 +17,9 @@ public class MyMinHeap {
         if (n == null) {
             return;
         }
-        System.out.println(this.nodes);
         this.nodes = this.nodes + 1;
         this.heap[this.nodes] = n;
         int current = this.nodes;
-        System.out.println(this.nodes);
 
         while (this.heap[current].getValue().intValue() < this.heap[parent(current)].getValue()
                 .intValue()) {

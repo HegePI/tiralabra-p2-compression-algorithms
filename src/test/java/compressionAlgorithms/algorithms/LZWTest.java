@@ -1,6 +1,7 @@
 package compressionAlgorithms.algorithms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.Scanner;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import compressionAlgorithms.IO.FileReaderWriter;
+import compressionAlgorithms.benchmark.BenchmarkObject;
 import compressionAlgorithms.dataStructures.MyList;
 
 public class LZWTest {
@@ -24,10 +25,22 @@ public class LZWTest {
 
     @AfterAll
     public static void cleanUp() {
-        File newFile = new File("src/test/resources/lzwCompress.lzw");
+        File smallReconstruct = new File("src/test/resources/small-lzw-reconstruct.txt");
+        File smallLzw = new File("src/test/resources/small.lzw");
+        File bigReconstruct = new File("src/test/resources/big-lzw-reconstruct.txt");
+        File bigLzw = new File("src/test/resources/big.lzw");
 
-        if (newFile.exists()) {
-            newFile.delete();
+        if (smallReconstruct.exists()) {
+            smallReconstruct.delete();
+        }
+        if (smallLzw.exists()) {
+            smallLzw.delete();
+        }
+        if (bigReconstruct.exists()) {
+            bigReconstruct.delete();
+        }
+        if (bigLzw.exists()) {
+            bigLzw.exists();
         }
     }
 
@@ -83,53 +96,43 @@ public class LZWTest {
     }
 
     @Test
-    public void testWriteCompressToFile() throws IOException {
-        FileReaderWriter frw = new FileReaderWriter();
+    public void testCompressFile() throws ClassNotFoundException, IOException {
+        File testFile = new File("src/test/resources/small.txt");
 
-        MyList<Integer> list = new MyList<>();
-
-        for (int i = 0; i < 10; i++) {
-            list.append(i);
-        }
-
-        Boolean success =
-                frw.writeLZWCompressToFile(list, new File("src/test/resources/lzwCompress.lzw"));
+        boolean success = lzw.compressFile(testFile);
         assertEquals(true, success);
 
-        File newFile = new File("src/test/resources/lzwCompress.lzw");
-        assertEquals(true, newFile.exists());
+        File outFile = new File("src/test/resources/small.lzw");
+        assertEquals(true, outFile.exists());
+
     }
 
     @Test
-    public void testReadCompressFromFile() throws IOException, ClassNotFoundException {
-        FileReaderWriter frw = new FileReaderWriter();
+    public void testDeCompressFile() throws ClassNotFoundException, IOException {
+        File testFile = new File("src/test/resources/small.txt");
 
-        MyList<Integer> list = new MyList<>();
+        boolean success = lzw.compressFile(testFile);
+        assertEquals(true, success);
 
-        for (int i = 0; i < 10; i++) {
-            list.append(i);
-        }
+        File outFile = new File("src/test/resources/small.lzw");
+        assertEquals(true, outFile.exists());
 
-        Boolean succes =
-                frw.writeLZWCompressToFile(list, new File("src/test/resources/lzwCompress.lzw"));
+        boolean deCompessSuccess = lzw.deCompressFile(outFile);
+        assertEquals(true, deCompessSuccess);
 
-        assertEquals(true, succes);
+        File deCompressOut = new File("src/test/resources/small-lzw-reconstruct.txt");
+        assertEquals(true, deCompressOut.exists());
+    }
 
-        File newFile = new File("src/test/resources/lzwCompress.lzw");
+    @Test
+    public void testCompressAndReturnBenchmark() throws ClassNotFoundException, IOException {
+        File file = new File("src/test/resources/big.txt");
 
-        assertEquals(true, newFile.exists());
+        BenchmarkObject bmo = lzw.compressAndReturnBenchmarkObject(file);
 
-        MyList<Integer> listFromFile =
-                frw.readLZWCompressFromFile(new File("src/test/resources/lzwCompress.lzw"));
-
-        boolean same = true;
-        for (int i = 0; i < 10; i++) {
-            if (list.get(i).intValue() != listFromFile.get(i).intValue()) {
-                same = false;
-                break;
-            }
-        }
-
-        assertEquals(true, same);
+        assertTrue(bmo instanceof BenchmarkObject);
+        assertTrue(bmo.getCompressTime() instanceof Double);
+        assertTrue(bmo.getDeCompressTime() instanceof Double);
+        assertTrue(bmo.getSavedSpace() instanceof Double);
     }
 }

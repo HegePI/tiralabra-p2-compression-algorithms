@@ -21,7 +21,7 @@ public class Huffman {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public Boolean compressAndSaveToFile(File file) throws IOException, ClassNotFoundException {
+    public Boolean compressFile(File file) throws IOException, ClassNotFoundException {
 
         FileReaderWriter frw = new FileReaderWriter();
         String text = frw.readTextFromFile(file);
@@ -32,6 +32,26 @@ public class Huffman {
         String bits = getBits(text, charsBitRepresentations);
         String outPath = file.getCanonicalPath().split("\\.")[0];
         return frw.writeBitsToFile(outPath, bits, charFrequencies);
+    }
+
+    /**
+     * Decompresses the given files content and saves the result to a new file
+     * 
+     * @param file To be decompressed file
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
+    public Boolean deCompressFile(File file) throws ClassNotFoundException, IOException {
+        FileReaderWriter frw = new FileReaderWriter();
+        String bits = frw.readBitsFromFile(file);
+        int[] charFrequencies =
+                frw.readFrequenciesFromFile(file.getCanonicalPath().split("\\.")[0] + ".map");
+        Node root = constructHuffmanTree(charFrequencies);
+        String originalText = getOriginalText(bits, root);
+        File reconstruct =
+                new File(file.getCanonicalPath().split("\\.")[0] + "-huffman-reconstruct.txt");
+        return frw.writeTextToFile(reconstruct, originalText);
     }
 
     /**
@@ -65,26 +85,6 @@ public class Huffman {
 
         return new BenchmarkObject((compressEnd - compressStart) / 10e9,
                 (deCompressEnd - deCompressStart) / 10e9, savedSpace);
-    }
-
-    /**
-     * Decompresses the given files content and saves the result to a new file
-     * 
-     * @param file To be decompressed file
-     * @return
-     * @throws ClassNotFoundException
-     * @throws IOException
-     */
-    public Boolean deCompressFile(File file) throws ClassNotFoundException, IOException {
-        FileReaderWriter frw = new FileReaderWriter();
-        String bits = frw.readBitsFromFile(file);
-        int[] charFrequencies =
-                frw.readFrequenciesFromFile(file.getCanonicalPath().split("\\.")[0] + ".map");
-        Node root = constructHuffmanTree(charFrequencies);
-        String originalText = getOriginalText(bits, root);
-        File reconstruct =
-                new File(file.getCanonicalPath().split("\\.")[0] + "-huffman-reconstruct.txt");
-        return frw.writeTextToFile(reconstruct, originalText);
     }
 
     /**
