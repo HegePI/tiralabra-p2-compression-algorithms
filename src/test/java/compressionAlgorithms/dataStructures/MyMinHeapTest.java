@@ -95,5 +95,4 @@ public class MyMinHeapTest {
         assertEquals("(Char: a, value: 2)\n(Char: b, value: 3)\n(Char: c, value: 4)\n",
                 nodes.toString());
     }
-
 }
