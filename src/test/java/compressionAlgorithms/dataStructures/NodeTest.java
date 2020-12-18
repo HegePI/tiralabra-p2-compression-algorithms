@@ -30,7 +30,18 @@ public class NodeTest {
     }
 
     @Test
-    public void testCompareNodes() {
+    public void testCompareNodesBigger() {
         assertEquals(1, nodeB.compareTo(nodeA));
+    }
+
+    @Test
+    public void testCompareNodesSmaller() {
+        assertEquals(-1, nodeA.compareTo(nodeB));
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("(leftchild: (Char: a, value: 3), value: 7, rightchild: (Char: b, value: 4))",
+                nodeC.toString());
     }
 }

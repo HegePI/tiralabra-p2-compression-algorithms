@@ -69,4 +69,31 @@ public class MyMinHeapTest {
         assertEquals(third.getCharacter(), 'c');
     }
 
+    @Test
+    public void testLenghthen() {
+        MyMinHeap nodes = new MyMinHeap();
+
+        for (int i = 0; i < 1100; i++) {
+            nodes.insertNode(new Node(i));
+        }
+        assertEquals(1100, nodes.getSize());
+        for (int i = 0; i < 1100; i++) {
+            assertEquals(i, nodes.getFirstNode().value.intValue());
+        }
+
+        assertEquals(0, nodes.getSize());
+    }
+
+    @Test
+    public void testToString() {
+        MyMinHeap nodes = new MyMinHeap();
+
+        nodes.insertNode(new Node('a', 2));
+        nodes.insertNode(new Node('b', 3));
+        nodes.insertNode(new Node('c', 4));
+
+        assertEquals("(Char: a, value: 2)\n(Char: b, value: 3)\n(Char: c, value: 4)\n",
+                nodes.toString());
+    }
+
 }

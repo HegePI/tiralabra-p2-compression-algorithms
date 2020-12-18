@@ -17,9 +17,11 @@ public class MyMinHeap {
         if (n == null) {
             return;
         }
+        System.out.println(this.nodes);
         this.nodes = this.nodes + 1;
         this.heap[this.nodes] = n;
         int current = this.nodes;
+        System.out.println(this.nodes);
 
         while (this.heap[current].getValue().intValue() < this.heap[parent(current)].getValue()
                 .intValue()) {
@@ -54,10 +56,14 @@ public class MyMinHeap {
     }
 
     private boolean nodeIsLeaf(int pos) {
+        if (getLeftChild(pos) > this.heap.length) {
+            return true;
+        }
         if (this.heap[getLeftChild(pos)] != null || this.heap[getRightChild(pos)] != null) {
             return false;
         }
         return true;
+
     }
 
     private int parent(int pos) {
@@ -65,7 +71,7 @@ public class MyMinHeap {
     }
 
     private int getLeftChild(int pos) {
-        return (2 * pos);
+        return 2 * pos;
     }
 
     private int getRightChild(int pos) {
@@ -106,7 +112,7 @@ public class MyMinHeap {
     }
 
     private void lenghthen() {
-        Node[] newHeap = (Node[]) new Object[this.nodes + (this.DEFAULT_CAPACITY / 2)];
+        Node[] newHeap = new Node[this.nodes + (this.DEFAULT_CAPACITY / 2)];
         for (int i = 0; i < this.heap.length; i++) {
             newHeap[i] = this.heap[i];
         }

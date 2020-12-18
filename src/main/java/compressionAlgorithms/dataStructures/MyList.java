@@ -37,10 +37,16 @@ public class MyList<K> implements Serializable {
         }
     }
 
-    public boolean contains(K object) {
-        if (this.list instanceof String[] && object instanceof String) {
-            for (String s : (String[]) this.list) {
-                if (stringEquality((String) object, s)) {
+    public boolean contains(K object) throws ClassCastException {
+        if (object instanceof String) {
+            for (int i = 0; i < this.entries; i++) {
+                if (stringEquality((String) object, (String) this.list[i])) {
+                    return true;
+                }
+            }
+        } else if (object instanceof Integer) {
+            for (int i = 0; i < this.entries; i++) {
+                if (((Integer) this.list[i]).intValue() == ((Integer) object).intValue()) {
                     return true;
                 }
             }
@@ -49,9 +55,17 @@ public class MyList<K> implements Serializable {
     }
 
     public int getIndexOf(K object) {
-        if (this.list instanceof String[] && object instanceof String) {
+        if (object instanceof String) {
             for (int i = 0; i < this.entries; i++) {
                 if (stringEquality((String) this.list[i], (String) object)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        if (object instanceof Integer) {
+            for (int i = 0; i < this.entries; i++) {
+                if (((Integer) this.list[i]).intValue() == ((Integer) object).intValue()) {
                     return i;
                 }
             }
