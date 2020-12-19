@@ -35,22 +35,6 @@ public class FileReaderWriter {
         out.close();
         mapOut.close();
 
-        // FileOutputStream fos = new FileOutputStream(outputPath + ".huff");
-        // String byteString = "";
-        // for (String bit : bits.split("")) {
-        // byteString = byteString + bit;
-        // if (byteString.length() == 8) {
-        // int asInt = Integer.parseInt(byteString, 2);
-        // fos.write(asInt);
-        // byteString = "";
-        // }
-        // }
-        // if (byteString.length() > 0) {
-        // int asInt = Integer.parseInt(byteString, 2);
-        // fos.write(asInt);
-        // }
-        // fos.close();
-        // return true;
         try {
             File bitFile = new File(outputPath + ".huff");
             bitFile.createNewFile();
@@ -74,16 +58,6 @@ public class FileReaderWriter {
      * @throws ClassNotFoundException
      */
     public String readBitsFromFile(File file) throws IOException, ClassNotFoundException {
-        // FileInputStream fin = new FileInputStream(inputPath);
-        // String bits = "";
-        // for (Byte b : fin.readAllBytes()) {
-        // String s1 = String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace('
-        // ', '0');
-        // bits = bits + s1;
-        // }
-
-        // fin.close();
-        // return bits;
         String result = "";
         Scanner reader = new Scanner(file);
 
